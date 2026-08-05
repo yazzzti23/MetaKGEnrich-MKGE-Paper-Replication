@@ -49,7 +49,9 @@ COGNITIVE_LABELS = {
     "louvain": "poor module transfer -- isolated within a tiny topic cluster",
 }
 
-QUESTIONS_PER_METRIC = 5  # matches the paper exactly
+# Paper value = 5
+# Demo value = 2 (to fit Groq free-tier quota)
+QUESTIONS_PER_METRIC = 2
 
 
 def get_node_preview(driver, node_id: str, fallback_label: str) -> str:

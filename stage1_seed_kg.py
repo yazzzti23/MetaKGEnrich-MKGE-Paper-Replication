@@ -38,7 +38,10 @@ load_dotenv()  # reads the .env file sitting next to this script
 # -----------------------------------------------------------------------
 # CONFIG -- this is the ONLY thing you should change to test a new question
 # -----------------------------------------------------------------------
-QUESTION = "Who owns the rights to Alice in Wonderland?"
+GENERIC_ENTITIES = ["Person", "Organization", "Location", "Work", "Event", "Concept", "Date"]
+GENERIC_RELATIONS = ["RELATED_TO", "LOCATED_IN", "PART_OF", "CREATED_BY",
+                      "OWNS", "CAUSED_BY", "OCCURRED_ON", "ASSOCIATED_WITH"]
+QUESTION = "Who are the top three richest people in India?"
 # ^ This is literally one of the worked examples in Table 3 of the paper
 #   (their "GraphRAG before/after" table). Using it first means you can
 #   sanity-check your output against what they report.
@@ -64,6 +67,33 @@ def get_seed_snippet(question: str) -> str:
     tavily = TavilyClient(api_key=TAVILY_API_KEY)
     response = tavily.search(question, max_results=3)
     top_snippet = response["results"][0]["content"]
+    tavily = TavilyClient(api_key=TAVILY_API_KEY)
+
+    # response = tavily.search(
+    #     query=question,
+    #     search_depth="advanced",
+    #     max_results=3,
+    #     include_raw_content=True,
+    # )
+
+    # print("\n========== TAVILY RESULTS ==========\n")
+
+    # for i, result in enumerate(response["results"], start=1):
+    #     print(f"Result {i}")
+    #     print("Title:", result.get("title"))
+    #     print("URL:", result.get("url"))
+    #     print("Summary Length:", len(result.get("content") or ""))
+    #     print("Raw Length:", len(result.get("raw_content") or ""))
+    #     print("-" * 70)
+
+    # top = response["results"][0]
+
+    # top_snippet = (
+    #     top.get("raw_content")
+    #     or top.get("content")
+    #     or ""
+    # ) 
+
     print(f"[Stage 1a] Tavily top result ({len(top_snippet)} chars):")
     print(top_snippet[:300] + ("..." if len(top_snippet) > 300 else ""))
     print()
@@ -92,6 +122,7 @@ async def build_seed_kg(snippet: str, driver) -> None:
         llm=llm,
         driver=driver,
         embedder=embedder,
+        on_error="RAISE",
         from_pdf=False,  # we're passing raw text directly, not a file
     )
 

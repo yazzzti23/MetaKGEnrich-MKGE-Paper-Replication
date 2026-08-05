@@ -56,6 +56,10 @@ from stage3_question_generation import (
 
 load_dotenv()
 
+GENERIC_ENTITIES = ["Person", "Organization", "Location", "Work", "Event", "Concept", "Date"]
+GENERIC_RELATIONS = ["RELATED_TO", "LOCATED_IN", "PART_OF", "CREATED_BY",
+                      "OWNS", "CAUSED_BY", "OCCURRED_ON", "ASSOCIATED_WITH"]
+
 NEO4J_URI = os.environ["NEO4J_URI"]
 NEO4J_USERNAME = os.environ["NEO4J_USERNAME"]
 NEO4J_PASSWORD = os.environ["NEO4J_PASSWORD"]
@@ -122,6 +126,8 @@ async def main():
         driver=driver,
         embedder=embedder,
         text_splitter=splitter,
+        entities=GENERIC_ENTITIES,
+        relations=GENERIC_RELATIONS,
         from_pdf=False,
     )
 
@@ -146,9 +152,13 @@ async def main():
                 print("    -> no result found, skipping")
                 total_skipped += 1
                 continue
+            
             await kg_builder.run_async(text=snippet)
             total_ingested += 1
             print(f"    -> ingested ({len(snippet)} chars)")
+
+            # Wait before the next extraction to avoid hitting Groq's token rate limit
+            await asyncio.sleep(40)
 
         print()  # blank line between metric cycles
 

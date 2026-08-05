@@ -52,7 +52,7 @@ EMBED_DIM = 384                    # all-MiniLM-L6-v2 output size
 CACHE_FILE = "answers_cache.json"
 
 # Must match whatever QUESTION you set in stage1_seed_kg.py for this run
-QUESTION = "Who owns the rights to Alice in Wonderland?"
+QUESTION = "Who are the top three richest people in India?"
 
 
 def ensure_vector_index(driver) -> None:
