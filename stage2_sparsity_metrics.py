@@ -123,6 +123,59 @@ def flag_sparse_nodes(scores: dict):
     return sparse_flags, medians
 
 
+# =============================================================================
+# NEW (Cluster Memory foundation -- Phase 1)
+# =============================================================================
+def get_node_cluster_mapping(G: nx.Graph) -> dict:
+    """
+    Exposes the node -> cluster assignment that Louvain community detection
+    already computes INSIDE compute_sparsity_metrics() above (for the
+    "louvain" sparsity metric), but which is currently thrown away the
+    instant only the community *size* is read out of it.
+
+    This function does NOT modify compute_sparsity_metrics() or any other
+    existing function above -- it independently re-runs
+    nx.community.louvain_communities() on the same graph with the same
+    seed (42), which is deterministic and therefore produces the same
+    partition. It exists purely so that later phases (Cluster Memory
+    construction, and eventually the memory gates) have a way to look up
+    "what cluster is this node in?", which nothing in the pipeline could
+    answer before this.
+
+    IMPORTANT: this is intended to be called ONCE, on the graph loaded
+    immediately after the seed KG has been manually verified -- not
+    recomputed on every enrichment cycle the way stage4's sparsity
+    detection currently is. Re-running this on a graph that has since
+    grown (new nodes added by enrichment) would NOT give the same
+    cluster_id meanings as the first run, since Louvain would re-partition
+    the whole (now different) graph from scratch. That's a Stage 4 /
+    orchestration-level concern for a later phase, not something this
+    function needs to guard against itself -- it just faithfully exposes
+    whatever partition Louvain finds for whatever graph G it's given.
+
+    Parameters
+    ----------
+    G : networkx.Graph
+        Same graph object produced by load_entity_graph(driver) above --
+        this function does not fetch anything from Neo4j itself.
+
+    Returns
+    -------
+    dict[str, int]
+        Maps each node's Neo4j elementId (the same IDs already used
+        throughout this file, e.g. as keys in `scores` / `sparse_flags`)
+        to an integer cluster ID. Cluster IDs are simply the index into
+        Louvain's list of communities, so they're stable for a given
+        graph + seed, but carry no meaning across two DIFFERENT graphs.
+    """
+    node_to_cluster: dict = {}
+    communities = nx.community.louvain_communities(G, seed=42)
+    for cluster_id, community in enumerate(communities):
+        for node in community:
+            node_to_cluster[node] = cluster_id
+    return node_to_cluster
+
+
 def main():
     driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USERNAME, NEO4J_PASSWORD))
     driver.verify_connectivity()
