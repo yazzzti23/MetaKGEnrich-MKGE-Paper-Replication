@@ -64,12 +64,24 @@ class RepresentativeMemory:
 # =============================================================================
 @dataclass
 class AcceptedExemplar:
-    """One successful enrichment cycle's record, for a given cluster."""
+    """One successful enrichment cycle's record, for a given cluster.
+
+    accepted_triple is Optional (default None) -- as of the Question
+    Memory Gate's Stage 4 integration, this field is deliberately left
+    unpopulated by that integration. Stage 4's ingestion currently goes
+    through SimpleKGPipeline as one opaque extraction+ingestion step, so
+    there is no clean access to the SPECIFIC triple that came out of a
+    given snippet -- inventing one here would be fabricated data, not a
+    real exemplar. The field stays on the dataclass for the future
+    Post-Extraction Gate (a separate, later phase -- see this file's
+    module docstring) to populate once it has real triple-level access;
+    it just isn't required to construct an AcceptedExemplar today.
+    """
     sparse_node: str
     generated_question: str
     retrieved_evidence: str
-    accepted_triple: str
     acceptance_reason: str
+    accepted_triple: Optional[str] = None
 
 
 @dataclass
