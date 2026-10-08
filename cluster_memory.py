@@ -42,6 +42,34 @@ import networkx as nx
 
 
 # =============================================================================
+# Small helper (local copy -- see note below)
+# =============================================================================
+def _cosine_similarity(vec_a, vec_b) -> float:
+    """Plain Python cosine similarity, no numpy -- matches this project's
+    existing convention (compute_cluster_embedding's average below is
+    also plain Python).
+
+    This is intentionally a LOCAL copy of the identical helper already
+    in memory_gates.py, not an import from it: memory_gates.py imports
+    compute_cluster_embedding FROM this file, so importing back from
+    memory_gates.py here would create a circular import. Kept as small,
+    duplicated, pure logic rather than restructuring either file's
+    imports.
+    """
+    if not vec_a or not vec_b or len(vec_a) != len(vec_b):
+        return 0.0
+
+    dot = sum(a * b for a, b in zip(vec_a, vec_b))
+    norm_a = sum(a * a for a in vec_a) ** 0.5
+    norm_b = sum(b * b for b in vec_b) ** 0.5
+
+    if norm_a == 0.0 or norm_b == 0.0:
+        return 0.0
+
+    return max(0.0, min(1.0, dot / (norm_a * norm_b)))
+
+
+# =============================================================================
 # Representative Memory
 # =============================================================================
 @dataclass
@@ -94,20 +122,29 @@ class RejectedExemplar:
     confidence_score: float
 
 
+# Configurable cap on rejected exemplars retained PER CLUSTER. Applies
+# only to RejectedExemplar (see ExemplarMemory.add_rejected() below) --
+# AcceptedExemplar has no cap, unchanged. Chosen as a plain module
+# constant (not derived from anything else) so it's trivially
+# overridable per-call in tests without needing to patch this module.
+MAX_REJECTED_EXEMPLARS_PER_CLUSTER = 50
+
+
 @dataclass
 class ExemplarMemory:
     """
     Holds both exemplar lists for one cluster. accepted/rejected are plain
-    lists -- append-only for now.
+    lists.
+
+    accepted is still append-only, unbounded -- pruning in this phase
+    applies ONLY to rejected exemplars (see add_rejected() below); this
+    was a specific, scoped requirement, not a general exemplar-memory
+    change.
 
     add_rejected() exists as its own method (rather than callers doing
     `exemplars.rejected.append(...)` directly) specifically so that
-    pruning has a single, obvious place to be added later: once a cap is
-    decided (see the earlier architecture review), the prune step slots
-    in right after the append below, and every future call site
-    automatically benefits without needing to change anything about how
-    they call add_rejected(). No pruning logic exists yet, per this
-    phase's scope.
+    pruning could be added later without changing any call site -- that
+    is exactly what happens below now.
     """
     accepted: list = field(default_factory=list)
     rejected: list = field(default_factory=list)
@@ -115,12 +152,41 @@ class ExemplarMemory:
     def add_accepted(self, exemplar: AcceptedExemplar) -> None:
         self.accepted.append(exemplar)
 
-    def add_rejected(self, exemplar: RejectedExemplar) -> None:
-        # Pruning belongs here once implemented (Phase 3+), e.g.:
-        #   self.rejected.append(exemplar)
-        #   self.rejected = self._prune(self.rejected)
-        # Left as a plain append for now, intentionally.
+    def add_rejected(self, exemplar: RejectedExemplar, max_rejected: int = MAX_REJECTED_EXEMPLARS_PER_CLUSTER) -> None:
+        """
+        Appends exemplar, then enforces a maximum retained count for
+        THIS cluster's rejected list only.
+
+        PRUNING POLICY -- deterministic, oldest-first (FIFO)
+        -------------------------------------------------------
+        self.rejected is a plain list appended to in call order, so
+        index 0 is always the least-recently-added (oldest) exemplar
+        and index -1 is always the most-recently-added. When len(self.rejected)
+        exceeds max_rejected after this append, the OLDEST entries are
+        dropped from the front until exactly max_rejected remain --
+        i.e. simple FIFO eviction. This is deterministic (no
+        similarity/score-based selection, no randomness) and requires
+        no new fields on RejectedExemplar itself -- append order IS the
+        recency order, nothing extra needs tracking.
+
+        Parameters
+        ----------
+        exemplar : RejectedExemplar
+            Unchanged structure -- this function does not read or
+            modify any of its fields.
+        max_rejected : int
+            Defaults to the module-level MAX_REJECTED_EXEMPLARS_PER_CLUSTER
+            constant below, so every existing call site (Stage 4, via
+            gate_cluster_memory.exemplars.add_rejected(...)) gets
+            pruning automatically with no call-site change required.
+            Accepting it as a parameter (rather than only reading the
+            module constant inside the method) keeps this testable
+            with small limits without needing to monkeypatch a global.
+        """
         self.rejected.append(exemplar)
+        if max_rejected is not None and len(self.rejected) > max_rejected:
+            overflow = len(self.rejected) - max_rejected
+            del self.rejected[:overflow]
 
 
 # =============================================================================
@@ -144,6 +210,18 @@ class ClusterMemoryStore:
 
     def __init__(self):
         self._clusters: dict = {}
+        # cluster_id -> [member_node_id, ...]. Populated once by
+        # build_cluster_memory_store() below, and then appended to by
+        # assign_new_node() as nodes are assigned during enrichment.
+        # This did not exist before assign_new_node() was implemented --
+        # build_cluster_memory_store() previously computed this same
+        # grouping locally and discarded it, since nothing needed it
+        # after initialization. Now it's the minimal piece of state
+        # nearest-cluster assignment needs (compute_cluster_embedding
+        # requires a cluster's member_node_ids, and ClusterMemory itself
+        # only stores human-readable labels, not node ids -- see
+        # memory_gates.py's module docstring for the same reasoning).
+        self._cluster_member_node_ids: dict = {}
 
     def add(self, cluster_memory: ClusterMemory) -> None:
         self._clusters[cluster_memory.cluster_id] = cluster_memory
@@ -157,31 +235,76 @@ class ClusterMemoryStore:
     def __len__(self) -> int:
         return len(self._clusters)
 
-    def assign_new_node(self, node_id: str, node_embedding) -> int:
+    def assign_new_node(self, node_id: str, node_embedding, driver) -> Optional[int]:
         """
-        INTERFACE ONLY -- intentionally not implemented in this phase.
+        Minimal nearest-cluster assignment for a node that appears DURING
+        enrichment (i.e. after the one-time initial community detection
+        in build_cluster_memory_store() already ran). Compares
+        node_embedding against each existing cluster's on-demand
+        embedding (compute_cluster_embedding() over that cluster's
+        CURRENT member_node_ids) and returns the closest cluster_id.
 
-        Later (once Stage 4's orchestration and the memory gates are being
-        built), this is where a node that appears DURING enrichment --
-        i.e. after the one-time initial community detection this file
-        performs -- gets assigned to its nearest EXISTING cluster, most
-        likely by comparing node_embedding against each cluster's
-        on-demand embedding from compute_cluster_embedding() below and
-        returning the closest cluster_id.
+        This does not redo or touch Louvain community detection -- it
+        only decides which EXISTING cluster a new node joins, using the
+        same on-demand embedding mechanism the gate's semantic signal
+        already relies on. No new memory architecture, no new signal.
 
-        Raising NotImplementedError here (rather than silently doing
-        nothing, or a naive default) is deliberate: it makes it obvious
-        and immediate if anything tries to call this before Phase 3 exists,
-        instead of failing silently or producing wrong cluster
-        assignments.
+        Fail-open (returns None), matching the caller's existing
+        fail-open handling for unclustered nodes:
+          - node_embedding is falsy (e.g. this node has no embedded
+            Chunk yet).
+          - this store has no clusters at all, or none of them has a
+            computable embedding yet (cold start -- e.g. right at the
+            start of a run, before any cluster has an embedded member).
+        Never raises, never guesses -- same "no fabricated assignment"
+        principle as the rest of this file.
+
+        On a successful assignment, node_id is appended to that
+        cluster's tracked member_node_ids so this node counts toward
+        that cluster's embedding (and toward the gate's semantic
+        signal) from this point forward, and so a later call to this
+        method for a DIFFERENT new node sees this one too.
+
+        Parameters
+        ----------
+        node_id : str
+            The new node's Neo4j elementId.
+        node_embedding : list[float] or None
+            The new node's own embedding -- in practice, obtained by the
+            caller via compute_cluster_embedding(driver, [node_id]),
+            which for a single-node list simply returns that node's own
+            Chunk embedding (no new Cypher needed -- reuses the existing
+            function as-is).
+        driver : neo4j.Driver
+            Existing driver, passed through to compute_cluster_embedding()
+            for each candidate cluster.
+
+        Returns
+        -------
+        int or None
+            The assigned cluster_id, or None if assignment could not be
+            performed (see fail-open cases above).
         """
-        raise NotImplementedError(
-            "assign_new_node() is a placeholder interface for "
-            "nearest-existing-cluster assignment. Not implemented in this "
-            "phase -- community detection is only run once, on the "
-            "verified seed KG, via build_cluster_memory_store(). Wiring "
-            "this up is a later-phase task."
-        )
+        if not node_embedding or not self._cluster_member_node_ids:
+            return None
+
+        best_cluster_id = None
+        best_similarity = -1.0
+
+        for cluster_id, member_node_ids in self._cluster_member_node_ids.items():
+            cluster_embedding = compute_cluster_embedding(driver, member_node_ids)
+            if cluster_embedding is None:
+                continue  # this cluster has no computable embedding yet -- skip, don't guess
+            similarity = _cosine_similarity(node_embedding, cluster_embedding)
+            if similarity > best_similarity:
+                best_similarity = similarity
+                best_cluster_id = cluster_id
+
+        if best_cluster_id is None:
+            return None  # no cluster had a usable embedding -- fail-open
+
+        self._cluster_member_node_ids[best_cluster_id].append(node_id)
+        return best_cluster_id
 
 
 # =============================================================================
@@ -387,5 +510,12 @@ def build_cluster_memory_store(driver, node_cluster_map: dict, G: nx.Graph,
         )
 
         store.add(ClusterMemory(cluster_id=cluster_id, representative=representative))
+        # Record this cluster's member node ids on the store itself so
+        # assign_new_node() can later recompute this cluster's embedding
+        # (and grow this same list) without needing node_cluster_map
+        # threaded back in from outside. Previously this grouping was
+        # computed into the local clusters_to_nodes dict above and then
+        # discarded once the loop finished -- nothing read it afterward.
+        store._cluster_member_node_ids[cluster_id] = list(member_node_ids)
 
     return store

@@ -632,3 +632,277 @@ def question_memory_gate(question: str, node_id: str, node_label: str, cluster_m
         decision_path=decision_path,
         attempt_number=attempt_number,
     )
+
+
+# =============================================================================
+# Post-Extraction Memory Gate
+# =============================================================================
+# SCOPE: separate gate, separate result type, separate constants from the
+# Question Memory Gate above. Nothing above this line is touched or
+# reused by name -- only compute_cluster_embedding() (from
+# cluster_memory.py) and _cosine_similarity() (this file) are shared,
+# exactly as they're already shared with question_memory_gate() above.
+#
+# WHY THIS GATE EXISTS
+# ----------------------
+# question_memory_gate() decides whether a QUESTION is worth spending
+# retrieval/extraction resources on, BEFORE any Tavily call happens.
+# This gate runs AFTER SimpleKGPipeline has already extracted candidate
+# entities/relationships from the retrieved text, and decides whether
+# that ACTUAL extracted content belongs to the target node's cluster
+# and should really be written to the KG -- catching cases where a
+# question passed the first gate but the retrieved snippet still turned
+# out to be off-topic, or where extraction itself pulled out mostly
+# noise (generic terms, fragments, etc.).
+#
+# PRE-INGESTION INTERCEPTION -- CONFIRMED, NOT ASSUMED
+# -------------------------------------------------------
+# Inspected against the installed neo4j_graphrag==1.19.0 source directly
+# (experimental/pipeline/kg_builder.py, components/kg_writer.py):
+# SimpleKGPipeline accepts an optional kg_writer component. Its internal
+# pipeline always calls kg_writer.run(graph: Neo4jGraph,
+# lexical_graph_config) with the fully-built extraction result --
+# Neo4jNode/Neo4jRelationship objects, NOT YET WRITTEN to Neo4j -- right
+# before Neo4jWriter.run() would otherwise immediately upsert them. This
+# means a custom KGWriter subclass can genuinely intercept extraction
+# results pre-ingestion; this is real interception, not an
+# approximation or a post-hoc cleanup pass. See post_extraction_writer.py
+# (new file) for the KGWriter subclass that does this and calls
+# post_extraction_memory_gate() below with the extracted content.
+#
+# INTERFACE CHOICE -- plain lists, not raw Neo4jGraph objects
+# --------------------------------------------------------------
+# post_extraction_memory_gate() below takes plain lists of entity
+# labels / relationship types, NOT a neo4j_graphrag Neo4jGraph object --
+# mirrors question_memory_gate()'s existing pattern of taking primitive
+# arguments rather than framework objects, keeps this file free of any
+# neo4j_graphrag import, and makes the gate trivially testable with
+# mocked/hand-written data (see test_post_extraction_gate.py) without
+# constructing real pipeline objects. post_extraction_writer.py is
+# responsible for translating a real Neo4jGraph into these primitives.
+#
+# NO LLM TIEBREAK IN THIS PHASE -- DELIBERATE SIMPLIFICATION
+# ----------------------------------------------------------------
+# Unlike question_memory_gate(), this gate has no LLM tiebreak path.
+# The ambiguous middle band (T_REJECT < score < T_ACCEPT) is resolved
+# deterministically toward REJECT rather than calling an LLM. This is a
+# scope decision for this implementation phase (smallest possible
+# change, no added API calls for an ambiguous case), not a discovered
+# bug -- flagged explicitly as a known limitation/future improvement.
+#
+# accepted_triple IS POPULATED HERE, NOT FABRICATED
+# ----------------------------------------------------
+# AcceptedExemplar.accepted_triple (cluster_memory.py) has stayed
+# Optional[str]=None throughout the Question Memory Gate's integration
+# specifically because Stage 4 had no clean access to what was actually
+# extracted. This gate is exactly the point where that access exists --
+# the caller (Stage 4) can now build a real, non-fabricated
+# accepted_triple string from extracted_entity_labels /
+# extracted_relationship_types on an ACCEPT decision.
+POST_EXTRACTION_W_SEMANTIC = 0.5
+POST_EXTRACTION_W_ENTITY_OVERLAP = 0.5
+
+POST_EXTRACTION_T_ACCEPT = 0.70
+POST_EXTRACTION_T_REJECT = 0.35
+
+
+@dataclass
+class PostExtractionGateResult:
+    """
+    Everything post_extraction_memory_gate() reports back to its caller.
+
+    signals holds the RAW, unweighted value of each signal -- "semantic"
+    is None when cold-start (no computable cluster embedding yet),
+    exactly mirroring GateResult's cold-start convention above.
+    "entity_overlap" is never None (see _post_extraction_entity_overlap_signal's
+    docstring for why it's always computable once there's at least one
+    extracted entity).
+
+    kept_entity_labels echoes extracted_entity_labels back on an ACCEPT
+    decision (empty list on REJECT) -- purely for the caller's logging/
+    exemplar-writing convenience, not used internally by this gate.
+    """
+    decision: str                 # "accept" or "reject"
+    confidence_score: float       # combined weighted score, deterministic, always present
+    signals: dict                 # {"semantic": float|None, "entity_overlap": float}
+    decision_path: str            # always "deterministic" in this phase (no LLM tiebreak)
+    kept_entity_labels: list
+
+
+def _post_extraction_entity_overlap_signal(node_label: str, extracted_entity_labels: list,
+                                            cluster_memory) -> float:
+    """
+    Fraction of extracted_entity_labels that plausibly belong to this
+    target node's cluster: a case-insensitive substring match against
+    EITHER the target node's own label OR any of the cluster's existing
+    representative_entities (cluster_memory.representative.representative_entities
+    -- the same list build_cluster_memory_store() already populates for
+    every cluster; nothing new is stored to support this).
+
+    Always computable (never None / cold-start) once
+    extracted_entity_labels is non-empty: node_label alone is always a
+    valid, non-empty comparison target, even if the cluster happens to
+    have zero representative_entities recorded. The caller
+    (post_extraction_memory_gate) never calls this with an empty
+    extracted_entity_labels -- that case is rejected immediately,
+    before any signal is computed at all.
+    """
+    reference_labels = set()
+    if node_label:
+        reference_labels.add(node_label.strip().lower())
+    if cluster_memory is not None:
+        for label in cluster_memory.representative.representative_entities:
+            if label:
+                reference_labels.add(str(label).strip().lower())
+
+    if not reference_labels or not extracted_entity_labels:
+        return 0.0
+
+    matched = 0
+    for label in extracted_entity_labels:
+        label_lower = str(label).strip().lower()
+        if any(ref in label_lower or label_lower in ref for ref in reference_labels):
+            matched += 1
+
+    return matched / len(extracted_entity_labels)
+
+
+def _combine_post_extraction_signals(raw_signals: dict) -> float:
+    """
+    Same renormalized-weighted-average, cold-start-excluding approach as
+    _combine_signals() above, applied to this gate's own two signals and
+    its own weights (POST_EXTRACTION_W_*). Kept as a separate function
+    (not a generalization of _combine_signals) so neither gate's
+    combination logic can accidentally affect the other's.
+
+    In practice "entity_overlap" is never None (see its docstring), so
+    the all-cold-start midpoint-fallback branch below is unreachable
+    with current callers -- kept anyway, for the same defensive reason
+    _combine_signals() keeps it: never silently default an all-missing
+    combination to a made-up neutral score.
+    """
+    weights = {"semantic": POST_EXTRACTION_W_SEMANTIC, "entity_overlap": POST_EXTRACTION_W_ENTITY_OVERLAP}
+    available = {k: v for k, v in raw_signals.items() if v is not None}
+
+    if not available:
+        return (POST_EXTRACTION_T_ACCEPT + POST_EXTRACTION_T_REJECT) / 2
+
+    total_weight = sum(weights[k] for k in available)
+    return sum(available[k] * weights[k] for k in available) / total_weight
+
+
+def _log_post_extraction_decision(node_label: str, extracted_entity_labels: list,
+                                   raw_signals: dict, combined_score: float, decision: str) -> None:
+    """Plain print-based logging, matching _log_gate_decision()'s existing
+    convention above -- no logging framework introduced for this gate."""
+    semantic_str = f"{raw_signals['semantic']:.4f}" if raw_signals["semantic"] is not None else "None (cold-start)"
+    print(f"    [Post-Extraction Gate] node={node_label!r} "
+          f"extracted_entities={extracted_entity_labels} "
+          f"semantic={semantic_str} entity_overlap={raw_signals['entity_overlap']:.4f} "
+          f"combined={combined_score:.4f} -> {decision.upper()}")
+
+
+def post_extraction_memory_gate(node_label: str, extracted_entity_labels: list,
+                                 extracted_relationship_types: list, cluster_memory,
+                                 cluster_member_node_ids: list, driver, embedder) -> PostExtractionGateResult:
+    """
+    Evaluates ACTUAL extracted content (post-retrieval, post-extraction,
+    pre-ingestion) against the target node's cluster context, and
+    decides whether it should be written to the KG.
+
+    Two signals (see their own docstrings for detail):
+      - semantic: cosine similarity between an embedding of the
+        extracted content and the cluster's on-demand embedding
+        (compute_cluster_embedding, same mechanism the Question Memory
+        Gate's semantic signal already uses). None (cold-start,
+        excluded from the average) if the cluster has no computable
+        embedding yet.
+      - entity_overlap: fraction of extracted entity labels that match
+        the target node's own label or the cluster's
+        representative_entities. Always computable once there's at
+        least one extracted entity.
+
+    Immediate REJECT, no signals computed, if extracted_entity_labels is
+    empty -- nothing was extracted at all, so there is nothing to gate
+    on; this is not treated as an ambiguous/cold-start case.
+
+    Deterministic accept/reject only (no LLM tiebreak in this phase --
+    see this section's module-level comment above for why). The
+    ambiguous middle band resolves to REJECT.
+
+    Parameters
+    ----------
+    node_label : str
+        The label of the sparse node this question/retrieval targeted
+        (same node_label Stage 4 already threads through
+        question_memory_gate() calls).
+    extracted_entity_labels : list[str]
+        Labels of the entity nodes SimpleKGPipeline's extractor produced
+        for this retrieved snippet, EXCLUDING lexical-graph bookkeeping
+        nodes (Chunk/Document) -- see post_extraction_writer.py for
+        exactly how these are derived from the real Neo4jGraph.
+    extracted_relationship_types : list[str]
+        Relationship TYPES extracted alongside those entities (e.g.
+        "OWNS", "LOCATED_IN") -- folded into the semantic signal's input
+        text, not otherwise scored separately in this phase.
+    cluster_memory : ClusterMemory
+        Same cluster context question_memory_gate() already uses for
+        this node. Never None when this function is called -- the
+        caller (post_extraction_writer.py) checks for that upstream and
+        accepts unconditionally (fail-open) if it is.
+    cluster_member_node_ids : list[str]
+        Same cluster member id list threaded through question_memory_gate().
+    driver : neo4j.Driver
+        Passed through to compute_cluster_embedding().
+    embedder
+        Same embedder instance used throughout this project. Only
+        embed_query(text) is called on it, matching this file's
+        existing embedder-reuse convention.
+
+    Returns
+    -------
+    PostExtractionGateResult
+    """
+    if not extracted_entity_labels:
+        raw_signals = {"semantic": None, "entity_overlap": 0.0}
+        _log_post_extraction_decision(node_label, extracted_entity_labels, raw_signals, 0.0, "reject")
+        return PostExtractionGateResult(
+            decision="reject",
+            confidence_score=0.0,
+            signals=raw_signals,
+            decision_path="deterministic",
+            kept_entity_labels=[],
+        )
+
+    from cluster_memory import compute_cluster_embedding
+
+    extracted_text = " ".join(list(extracted_entity_labels) + list(extracted_relationship_types))
+    extracted_embedding = embedder.embed_query(extracted_text)
+
+    cluster_embedding = (
+        compute_cluster_embedding(driver, cluster_member_node_ids)
+        if cluster_member_node_ids else None
+    )
+    semantic_score = (
+        _cosine_similarity(extracted_embedding, cluster_embedding)
+        if cluster_embedding is not None else None
+    )
+
+    entity_overlap_score = _post_extraction_entity_overlap_signal(
+        node_label, extracted_entity_labels, cluster_memory,
+    )
+
+    raw_signals = {"semantic": semantic_score, "entity_overlap": entity_overlap_score}
+    combined_score = _combine_post_extraction_signals(raw_signals)
+
+    decision = "accept" if combined_score >= POST_EXTRACTION_T_ACCEPT else "reject"
+
+    _log_post_extraction_decision(node_label, extracted_entity_labels, raw_signals, combined_score, decision)
+
+    return PostExtractionGateResult(
+        decision=decision,
+        confidence_score=combined_score,
+        signals=raw_signals,
+        decision_path="deterministic",
+        kept_entity_labels=list(extracted_entity_labels) if decision == "accept" else [],
+    )

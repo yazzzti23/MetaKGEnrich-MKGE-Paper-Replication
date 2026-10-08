@@ -37,7 +37,7 @@ from openai import OpenAI
 from tavily import TavilyClient
 
 from neo4j_graphrag.embeddings import SentenceTransformerEmbeddings
-from neo4j_graphrag.experimental.components.text_splitters.fixed_size_splitter import (
+from neo4j_graphrag.components.text_splitters.fixed_size_splitter import (
     FixedSizeSplitter,
 )
 from neo4j_graphrag.experimental.pipeline.kg_builder import SimpleKGPipeline
@@ -62,6 +62,7 @@ from cluster_memory import (
     RejectedExemplar,
 )
 from memory_gates import question_memory_gate
+from post_extraction_writer import GatedKGWriter
 
 load_dotenv()
 
@@ -130,6 +131,14 @@ async def main():
     embedder = SentenceTransformerEmbeddings(model="all-MiniLM-L6-v2")
     splitter = FixedSizeSplitter(chunk_size=500, chunk_overlap=100)
 
+    # ---- Post-Extraction Memory Gate wiring ----
+    # gated_writer intercepts SimpleKGPipeline's extraction result
+    # BEFORE it's written to Neo4j (see post_extraction_writer.py for
+    # exactly how/why this is a genuine pre-ingestion hook). Passed as
+    # kg_writer= below, which SimpleKGPipeline accepts natively -- no
+    # other change to how SimpleKGPipeline is constructed or called.
+    gated_writer = GatedKGWriter(driver=driver, embedder=embedder)
+
     kg_builder = SimpleKGPipeline(
         llm=llm,
         driver=driver,
@@ -138,6 +147,7 @@ async def main():
         entities=GENERIC_ENTITIES,
         relations=GENERIC_RELATIONS,
         from_pdf=False,
+        kg_writer=gated_writer,
     )
 
     # ---- Cluster Memory Store: built ONCE here, held for the entire run.
@@ -159,6 +169,7 @@ async def main():
           f"{len(node_cluster_map)} node(s) clustered.\n")
 
     total_ingested, total_skipped, total_gate_rejected = 0, 0, 0
+    total_post_extraction_rejected = 0
 
     # ---- THE FIX: one metric at a time, detect -> question -> ingest,
     # ---- before moving to the next metric. Matches Algorithm 1 exactly.
@@ -284,27 +295,83 @@ async def main():
                 print("    -> no result found, skipping")
                 total_skipped += 1
                 continue
-            
+
+            # ---- Post-Extraction Memory Gate context ----
+            # Tell gated_writer which node/cluster THIS extraction is
+            # being evaluated against, right before the call that
+            # actually triggers extraction+ingestion. cluster_member_node_ids
+            # is None whenever gate_cluster_memory is None (fail-open
+            # node) -- gated_writer.run() checks cluster_memory is None
+            # itself and accepts unconditionally in that case, so no
+            # separate fail-open branching is needed here.
+            gated_writer.set_gate_context(
+                node_label=node_label,
+                cluster_memory=gate_cluster_memory,
+                cluster_member_node_ids=member_node_ids if gate_cluster_memory is not None else None,
+            )
+
             await kg_builder.run_async(text=snippet)
+            post_result = gated_writer.last_result
+
+            if post_result is not None and post_result.decision == "reject":
+                # Post-Extraction Gate rejected -- gated_writer already
+                # skipped writing this extraction to Neo4j entirely (see
+                # post_extraction_writer.py). Record a real
+                # RejectedExemplar (explicit failure reason, not
+                # fabricated) instead of the AcceptedExemplar the
+                # original code unconditionally wrote here.
+                print(f"    -> REJECTED by Post-Extraction Gate "
+                      f"(combined_score={post_result.confidence_score:.4f}, "
+                      f"signals={post_result.signals}) -- not written to KG.")
+                total_skipped += 1
+                total_post_extraction_rejected += 1
+                gate_cluster_memory.exemplars.add_rejected(RejectedExemplar(
+                    sparse_node=node_label,
+                    generated_question=final_question,
+                    failure_type="post_extraction_gate_reject",
+                    rejection_reason=(
+                        f"combined_score={post_result.confidence_score:.4f} did not clear "
+                        f"POST_EXTRACTION_T_ACCEPT; signals={post_result.signals}"
+                    ),
+                    confidence_score=post_result.confidence_score,
+                ))
+                # No exemplar-write-back accept path below, no sleep
+                # skip either -- still wait before the next extraction
+                # to avoid hitting Groq's rate limit.
+                await asyncio.sleep(40)
+                continue
+
             total_ingested += 1
             print(f"    -> ingested ({len(snippet)} chars)")
 
             # ---- Exemplar write-back -- only when a real cluster gated
             # ---- this question (fail-open nodes have no cluster_memory
-            # ---- to write to). accepted_triple is left None: this
-            # ---- pipeline's ingestion is one opaque SimpleKGPipeline
-            # ---- call, with no clean access to the specific triple it
-            # ---- wrote -- that's the future Post-Extraction Gate's job,
-            # ---- not fabricated here.
+            # ---- to write to). accepted_triple is now populated with
+            # ---- the REAL extracted entity labels when the Post-
+            # ---- Extraction Gate ran and accepted (post_result is not
+            # ---- None) -- this is genuine post-extraction data, not
+            # ---- fabricated. For fail-open nodes (post_result is None,
+            # ---- gate never ran), accepted_triple stays None exactly
+            # ---- as before -- unchanged behavior.
             if gate_cluster_memory is not None:
+                accepted_triple = (
+                    ", ".join(post_result.kept_entity_labels) if post_result is not None else None
+                )
+                acceptance_reason = (
+                    f"question_gate_accept_{accept_result.decision_path} "
+                    f"(combined_score={accept_result.confidence_score:.4f})"
+                )
+                if post_result is not None:
+                    acceptance_reason += (
+                        f"; post_extraction_gate_accept "
+                        f"(combined_score={post_result.confidence_score:.4f})"
+                    )
                 gate_cluster_memory.exemplars.add_accepted(AcceptedExemplar(
                     sparse_node=node_label,
                     generated_question=final_question,
                     retrieved_evidence=snippet,
-                    acceptance_reason=(
-                        f"question_gate_accept_{accept_result.decision_path} "
-                        f"(combined_score={accept_result.confidence_score:.4f})"
-                    ),
+                    acceptance_reason=acceptance_reason,
+                    accepted_triple=accepted_triple,
                 ))
 
             # Wait before the next extraction to avoid hitting Groq's token rate limit
@@ -316,7 +383,8 @@ async def main():
         after_total = session.run("MATCH (n:__Entity__) RETURN count(n) AS c").single()["c"]
 
     print(f"[Stage 4] Done. Ingested {total_ingested} answers, skipped {total_skipped} "
-          f"({total_gate_rejected} of those due to Question Memory Gate rejection after regeneration).")
+          f"({total_gate_rejected} of those due to Question Memory Gate rejection after regeneration, "
+          f"{total_post_extraction_rejected} due to Post-Extraction Gate rejection).")
     print(f"[Stage 4] Entity nodes BEFORE: {before_total}  ->  AFTER: {after_total}")
 
     driver.close()
