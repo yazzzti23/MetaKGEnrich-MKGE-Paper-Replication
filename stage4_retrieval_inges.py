@@ -45,7 +45,7 @@ from stage2_sparsity_metrics import (
     load_entity_graph,
 )
 
-from stage3_question_generation2 import (
+from stage3_question_gen import (
     generate_questions_for_metric,
     get_node_preview,
 )
