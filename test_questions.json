@@ -1,0 +1,41 @@
+{
+  "source": "Askin, Hadar & Conway-Smith, 'Enhancing Metacognitive AI: Knowledge-Graph Population with Graph-Theoretic LLM Enrichment' -- Table 3 (Google Research Natural Questions examples)",
+  "note": "Each question gets its own frozen seed (seeds/seed_<id>.json). Both pipelines (original MKGE and ours) run on the same seed. 'use' = include in the current round of runs.",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Where was High School Musical 2 filmed?",
+      "use": true,
+      "paper_before": "Mentions only East High School in Salt Lake City.",
+      "paper_after": "Corrects to the Entrada at Snow Canyon Country Club in St. George, Utah, noting golf-course and pool scenes."
+    },
+    {
+      "id": "q2",
+      "question": "Who owns the rights to Alice in Wonderland?",
+      "use": true,
+      "paper_before": "Claims Disney 'holds the rights' to the story.",
+      "paper_after": "Clarifies Carroll's novel is public-domain; Disney owns only its 1951 and 2010 screen adaptations."
+    },
+    {
+      "id": "q3",
+      "question": "Where did the first African-American Air Force unit train?",
+      "use": true,
+      "paper_before": "States simply 'Tuskegee, Alabama'.",
+      "paper_after": "Adds the unit's name -- Tuskegee Airmen -- and specifies Moton Field training site."
+    },
+    {
+      "id": "q4",
+      "question": "What causes monsoon winds to change direction seasonally?",
+      "use": true,
+      "paper_before": "Differential heating reverses land-sea pressure gradients.",
+      "paper_after": "Adds the south-west vs. north-east wind pair and explains summer land-heating versus winter ocean-heating moisture transport."
+    },
+    {
+      "id": "q5",
+      "question": "What are the requirements to pass the South African National Senior Certificate?",
+      "use": false,
+      "paper_before": "Lists 40% in three and 30 percent in three subjects.",
+      "paper_after": "Gives full checklist: 40% in three (incl. home-language), 30% in three more, six subjects total, pass at least five."
+    }
+  ]
+}
