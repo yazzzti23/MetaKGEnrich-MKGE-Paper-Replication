@@ -14,7 +14,18 @@ Changes vs the previous version:
   [S9] Removed dead code: assign_question_to_sparse_node (replaced by
        Stage 3's numbered attribution) and MAX_REGENERATION_ATTEMPTS
        (never used; Stage 4 allows exactly ONE regeneration).
-Scores, weights and thresholds are unchanged.
+  [PG2] Post-Extraction Gate v2 (post_extraction_filter, at the end of this
+       file): judges each extracted ENTITY and FACT instead of the whole
+       page. Keeps entities that are an anchor (the target node or a
+       cluster member) or connected to one within POST_V2_MAX_HOPS links
+       in the extraction; keeps facts whose two ends were kept; skips facts
+       that already exist in the graph; logs (does not act on) conflicts on
+       one-value relations; rejects the page only if nothing new survives.
+       Per-fact relevance (meaning similarity to the question) is computed
+       and LOGGED only -- not used to drop anything yet.
+       The old post_extraction_memory_gate() is kept below for reference
+       (legacy, no longer called by the pipeline).
+Question-Gate scores, weights and thresholds are unchanged.
 
 Original notes follow.
 
@@ -709,6 +720,10 @@ class PostExtractionGateResult:
     signals: dict                 # {"semantic": float|None, "entity_overlap": float}
     decision_path: str            # always "deterministic" in this phase (no LLM tiebreak)
     kept_entity_labels: list
+    # [PG2] Filled by post_extraction_filter(); empty for the legacy gate.
+    kept_entity_ids: set = field(default_factory=set)
+    kept_fact_indices: list = field(default_factory=list)
+    fact_log: list = field(default_factory=list)
 
 
 def _post_extraction_entity_overlap_signal(node_label: str, extracted_entity_labels: list,
@@ -888,3 +903,180 @@ def post_extraction_memory_gate(node_label: str, extracted_entity_labels: list,
         decision_path="deterministic",
         kept_entity_labels=list(extracted_entity_labels) if decision == "accept" else [],
     )
+
+
+# =============================================================================
+# [PG2] Post-Extraction Gate v2 -- judge each entity and fact separately
+# =============================================================================
+# WHY: the legacy gate above asks "what share of the extracted names do we
+# ALREADY know?" and needs ~0.70 to pass. A page full of NEW, on-topic
+# facts therefore scores low by design (live runs: ~0.31-0.35), and one
+# bad fact sinks the whole page. v2 asks a different question: "is this
+# entity / fact CONNECTED to the target or its cluster?" -- per entity and
+# per fact, with no score threshold to tune.
+#
+# RULES (in order):
+#   1. Anchors = the target node + the cluster's members (by name).
+#   2. An extracted entity is an anchor if its name matches an anchor name
+#      (same name after normalising, or whole-word surname match, see
+#      _names_match).
+#   3. Keep every entity reachable from an anchor within POST_V2_MAX_HOPS
+#      links, walking only the facts extracted from THIS page.
+#   4. Keep a fact only if BOTH its ends were kept.
+#   5. Skip a kept fact that already exists in the graph (same subject,
+#      relation, object -- either direction): status "duplicate".
+#   6. For relations in FUNCTIONAL_RELATIONS (one value expected, e.g. a
+#      date), log a conflict if the graph already has a DIFFERENT value.
+#      Logged only -- the fact is still kept.
+#   7. Reject the page only if no NEW fact survives.
+# Optional per-fact relevance (cosine similarity of "subject relation
+# object" to the question) is computed for the log only.
+
+POST_V2_MAX_HOPS = 2
+FUNCTIONAL_RELATIONS = {"OCCURRED_ON"}
+
+
+def _norm_name(name) -> str:
+    """Lower-case, collapse whitespace, strip surrounding punctuation."""
+    return " ".join(str(name or "").lower().split()).strip(" .,;:'\"")
+
+
+def _names_match(entity_name: str, anchor_name: str) -> bool:
+    """[PG2] Does an extracted entity name refer to an anchor?
+    True if the normalised names are equal, or the entity name mentions
+    the anchor (whole word; multi-word anchors also match on their last
+    word, e.g. "Portman" for "Natalie Portman"), or -- for entity names of
+    4+ characters -- the anchor mentions the entity name ("Swan" vs
+    "Black Swan")."""
+    e, a = _norm_name(entity_name), _norm_name(anchor_name)
+    if not e or not a:
+        return False
+    if e == a:
+        return True
+    if _mentions(anchor_name, entity_name):
+        return True
+    return len(e) >= 4 and _mentions(entity_name, anchor_name)
+
+
+def fact_key(subject_name, relation, object_name) -> tuple:
+    """[PG2] Normalised identity of a fact, used for duplicate checks."""
+    return (_norm_name(subject_name), str(relation).upper(), _norm_name(object_name))
+
+
+def verbalize_fact(subject_name, relation, object_name) -> str:
+    """'Natalie Portman' + 'CREATED_BY' + 'X' -> 'Natalie Portman created by X'."""
+    return f"{subject_name} {str(relation).replace('_', ' ').lower()} {object_name}"
+
+
+def post_extraction_filter(target_label: str, anchor_names: list, entities: list, facts: list,
+                           existing_fact_keys=frozenset(), existing_functional=None,
+                           relevance_fn=None, max_hops: int = POST_V2_MAX_HOPS) -> PostExtractionGateResult:
+    """[PG2] Pure function -- no Neo4j, no LLM. post_extraction_writer.py
+    gathers the inputs and applies the result.
+
+    Parameters
+    ----------
+    target_label : str
+        Name of the sparse node the question targeted.
+    anchor_names : list[str]
+        Target + cluster member names (duplicates/empties are fine).
+    entities : list[dict]
+        Extracted entities: {"id", "name", "type"}.
+    facts : list[dict]
+        Extracted facts between those entities: {"start", "type", "end"}
+        (start/end are entity ids).
+    existing_fact_keys : set[tuple]
+        fact_key(...) of facts already in the graph (both directions is fine).
+    existing_functional : dict[(subject_norm, RELATION)] -> set(object_norm)
+        Existing values of FUNCTIONAL_RELATIONS, for conflict logging.
+    relevance_fn : callable(str) -> float, optional
+        Scores a verbalised fact; logged only.
+
+    Returns PostExtractionGateResult with decision, kept_entity_ids,
+    kept_fact_indices (NEW facts to write), fact_log, and count signals.
+    """
+    existing_functional = existing_functional or {}
+    names = {e["id"]: e["name"] for e in entities}
+    anchors = [a for a in dict.fromkeys([target_label] + list(anchor_names or [])) if a]
+
+    anchor_ids = {e["id"] for e in entities if any(_names_match(e["name"], a) for a in anchors)}
+
+    # Walk the extracted facts (undirected) from the anchors, up to max_hops.
+    neighbours = {e["id"]: set() for e in entities}
+    for f in facts:
+        if f["start"] in neighbours and f["end"] in neighbours:
+            neighbours[f["start"]].add(f["end"])
+            neighbours[f["end"]].add(f["start"])
+    kept_ids, frontier = set(anchor_ids), set(anchor_ids)
+    for _ in range(max_hops):
+        frontier = {n for node in frontier for n in neighbours.get(node, ()) if n not in kept_ids}
+        kept_ids |= frontier
+
+    kept_fact_indices, fact_log, conflicts = [], [], 0
+    counts = {"kept": 0, "duplicate": 0, "dropped_unconnected": 0}
+    for i, f in enumerate(facts):
+        s_name, o_name = names.get(f["start"], f["start"]), names.get(f["end"], f["end"])
+        entry = {"subject": s_name, "relation": f["type"], "object": o_name}
+        if relevance_fn is not None:
+            try:
+                entry["relevance"] = round(float(relevance_fn(verbalize_fact(s_name, f["type"], o_name))), 4)
+            except Exception:
+                entry["relevance"] = None
+        if not (f["start"] in kept_ids and f["end"] in kept_ids):
+            entry["status"] = "dropped_unconnected"
+        elif fact_key(s_name, f["type"], o_name) in existing_fact_keys or \
+                fact_key(o_name, f["type"], s_name) in existing_fact_keys:
+            entry["status"] = "duplicate"
+        else:
+            entry["status"] = "kept"
+            kept_fact_indices.append(i)
+            if str(f["type"]).upper() in FUNCTIONAL_RELATIONS:
+                known = existing_functional.get((_norm_name(s_name), str(f["type"]).upper()), set())
+                if known and _norm_name(o_name) not in known:
+                    entry["conflict_with"] = sorted(known)
+                    conflicts += 1
+        counts[entry["status"]] += 1
+        fact_log.append(entry)
+
+    # New entities = kept, not anchors (anchors already exist in the graph).
+    new_entity_count = len(kept_ids - anchor_ids)
+    if kept_fact_indices:
+        decision, reason = "accept", "new_connected_facts"
+    elif not anchor_ids:
+        decision, reason = "reject", "no_anchor_in_extraction"
+    elif counts["duplicate"] and not counts["dropped_unconnected"]:
+        decision, reason = "reject", "nothing_new_only_duplicates"
+    else:
+        decision, reason = "reject", "nothing_connected"
+
+    signals = {
+        "reason": reason,
+        "anchors_found": len(anchor_ids),
+        "entities_total": len(entities),
+        "entities_kept": len(kept_ids),
+        "new_entities_kept": new_entity_count,
+        "facts_total": len(facts),
+        "facts_kept": counts["kept"],
+        "facts_duplicate": counts["duplicate"],
+        "facts_dropped_unconnected": counts["dropped_unconnected"],
+        "fact_conflicts": conflicts,
+    }
+    score = counts["kept"] / len(facts) if facts else 0.0
+    kept_labels = [names[i] for i in sorted(kept_ids)] if decision == "accept" else []
+
+    print(f"    [Post-Extraction Gate v2] node={target_label!r} {decision.upper()} ({reason}): "
+          f"facts kept={counts['kept']} duplicate={counts['duplicate']} "
+          f"dropped={counts['dropped_unconnected']} conflicts={conflicts}; "
+          f"entities kept={len(kept_ids)}/{len(entities)} (anchors {len(anchor_ids)})")
+
+    return PostExtractionGateResult(
+        decision=decision,
+        confidence_score=round(score, 4),
+        signals=signals,
+        decision_path="v2_connected_facts",
+        kept_entity_labels=kept_labels,
+        kept_entity_ids=kept_ids if decision == "accept" else set(),
+        kept_fact_indices=kept_fact_indices if decision == "accept" else [],
+        fact_log=fact_log,
+    )
+

@@ -1,0 +1,1945 @@
+{
+  "run_tag": "ours",
+  "started_at": "2026-10-21T13:53:54",
+  "settings": {
+    "selection_mode": "best",
+    "num_candidates": 3,
+    "metrics": [
+      "clique",
+      "non_clique",
+      "clustering",
+      "degree",
+      "betweenness",
+      "diameter",
+      "louvain"
+    ]
+  },
+  "entity_nodes_before": 8,
+  "clusters": {
+    "0": [
+      "Alice",
+      "Alice: Madness Returns",
+      "American McGee",
+      "American McGee's Alice",
+      "EA"
+    ],
+    "1": [
+      "Alice: Asylum"
+    ],
+    "2": [
+      "Lewis Carroll"
+    ],
+    "3": [
+      "Patreon"
+    ]
+  },
+  "questions": [
+    {
+      "metric": "clique",
+      "target_node": "Patreon",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:98",
+      "question": "Who authored the 414‑page design document for Alice: Asylum posted on Patreon?",
+      "cluster_resolution": "seed",
+      "cluster_id": 3,
+      "question_gate_1": {
+        "decision": "reject",
+        "score": 0.475,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.44995964842115416,
+          "entity": 0.5,
+          "accepted": null,
+          "rejected": null
+        }
+      },
+      "regenerated_question": "When was the 414‑page design document for Alice: Asylum published on Patreon?",
+      "question_gate_2": {
+        "decision": "accept",
+        "score": 0.4695,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.4390361523973663,
+          "entity": 0.5,
+          "accepted": null,
+          "rejected": null
+        }
+      },
+      "final_question": "When was the 414‑page design document for Alice: Asylum published on Patreon?",
+      "retrieval": {
+        "question": "When was the 414‑page design document for Alice: Asylum published on Patreon?",
+        "mode": "best",
+        "chosen_index": 2,
+        "candidates": [
+          {
+            "index": 0,
+            "url": "https://en.wikipedia.org/wiki/Area_code_414",
+            "title": "Area code 414 - Wikipedia",
+            "chars": 781,
+            "tavily_score": 0.1387769,
+            "similarity": 0.167,
+            "too_short": false
+          },
+          {
+            "index": 1,
+            "url": "https://www.law.cornell.edu/uscode/text/26/414",
+            "title": "26 U.S. Code § 414 - Definitions and special rules | U.S. Code | US Law | LII / Legal Information Institute",
+            "chars": 853,
+            "tavily_score": 0.03749929,
+            "similarity": 0.2482,
+            "too_short": false
+          },
+          {
+            "index": 2,
+            "url": "https://www.law.cornell.edu/rules/fre/rule_414",
+            "title": "Rule 414. Similar Crimes in Child Molestation Cases | Federal Rules of Evidence | US Law | LII / Legal Information Institute",
+            "chars": 1068,
+            "tavily_score": 0.019052766,
+            "similarity": 0.273,
+            "too_short": false
+          }
+        ],
+        "min_chars": 300,
+        "min_chars_fallback": false
+      },
+      "post_gate": {
+        "decision": "reject",
+        "reason": "no_anchor_in_extraction",
+        "share_of_facts_kept": 0.0,
+        "signals": {
+          "reason": "no_anchor_in_extraction",
+          "anchors_found": 0,
+          "entities_total": 25,
+          "entities_kept": 0,
+          "new_entities_kept": 0,
+          "facts_total": 16,
+          "facts_kept": 0,
+          "facts_duplicate": 0,
+          "facts_dropped_unconnected": 16,
+          "fact_conflicts": 0
+        },
+        "kept_entities": [],
+        "facts": [
+          {
+            "subject": "Rule 414",
+            "relation": "PART_OF",
+            "object": "Evidence Rules",
+            "relevance": 0.1905,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "Rule 414",
+            "relation": "RELATED_TO",
+            "object": "Child Molestation",
+            "relevance": 0.1992,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "Cornell Law School",
+            "relation": "PART_OF",
+            "object": "Cornell University",
+            "relevance": 0.095,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "Rule 414",
+            "relation": "RELATED_TO",
+            "object": "Similar Crimes in Child Molestation Cases",
+            "relevance": 0.1733,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "Rule 414",
+            "relation": "ASSOCIATED_WITH",
+            "object": "Cornell Law School",
+            "relevance": 0.2086,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "defendant",
+            "relation": "RELATED_TO",
+            "object": "child molestation",
+            "relevance": 0.0695,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "Pub. L. 103–322",
+            "relation": "ASSOCIATED_WITH",
+            "object": "Rule 414",
+            "relevance": 0.2958,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "Pub. L. 103–322",
+            "relation": "OCCURRED_ON",
+            "object": "Sept. 13, 1994",
+            "relevance": 0.2076,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "Pub. L. 103–322",
+            "relation": "OCCURRED_ON",
+            "object": "Apr. 26, 2011",
+            "relevance": 0.2418,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "Pub. L. 103–322",
+            "relation": "OCCURRED_ON",
+            "object": "Dec. 1, 2011",
+            "relevance": 0.2435,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "title XXXII, §320935(a)",
+            "relation": "OCCURRED_ON",
+            "object": "Sept. 13, 1994",
+            "relevance": 0.2123,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "title XXXII, §320935(a)",
+            "relation": "OCCURRED_ON",
+            "object": "Apr. 26, 2011",
+            "relevance": 0.2608,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "title XXXII, §320935(a)",
+            "relation": "OCCURRED_ON",
+            "object": "Dec. 1, 2011",
+            "relevance": 0.2477,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "rule 413",
+            "relation": "OCCURRED_ON",
+            "object": "July 9, 1995",
+            "relevance": 0.2144,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "section 320935(b)–(e)",
+            "relation": "PART_OF",
+            "object": "Pub. L. 103–322",
+            "relevance": 0.2592,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "Committee Notes on Rules—2011 Amendment",
+            "relation": "ASSOCIATED_WITH",
+            "object": "Effective Date",
+            "relevance": 0.2134,
+            "status": "dropped_unconnected"
+          }
+        ]
+      },
+      "outcome": "rejected_by_post_gate"
+    },
+    {
+      "metric": "clique",
+      "target_node": "Lewis Carroll",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:96",
+      "question": "How does Lewis Carroll’s original work influence the intellectual property of American McGee’s Alice?",
+      "cluster_resolution": "seed",
+      "cluster_id": 2,
+      "question_gate_1": {
+        "decision": "accept",
+        "score": 0.5909,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.6818361859163469,
+          "entity": 0.5,
+          "accepted": null,
+          "rejected": null
+        }
+      },
+      "regenerated_question": null,
+      "question_gate_2": null,
+      "final_question": "How does Lewis Carroll’s original work influence the intellectual property of American McGee’s Alice?",
+      "retrieval": {
+        "question": "How does Lewis Carroll’s original work influence the intellectual property of American McGee’s Alice?",
+        "mode": "best",
+        "chosen_index": 0,
+        "candidates": [
+          {
+            "index": 0,
+            "url": "https://en.wikipedia.org/wiki/American_McGee%27s_Alice",
+            "title": "American McGee's Alice - Wikipedia",
+            "chars": 1426,
+            "tavily_score": 0.6296157,
+            "similarity": 0.6772,
+            "too_short": false
+          },
+          {
+            "index": 1,
+            "url": "https://pekoeblaze.wordpress.com/2022/07/01/how-american-mcgees-alice-2000-influenced-and-didnt-influence-other-horror-games",
+            "title": "How “American McGee's Alice” (2000) Influenced – And Didn't ...",
+            "chars": 137,
+            "tavily_score": 0.49729064,
+            "similarity": 0.7884,
+            "too_short": true
+          },
+          {
+            "index": 2,
+            "url": "https://therightstuff.medium.com/flashback-american-mcgees-alice-642e66a78b8",
+            "title": "Flashback: American McGee's Alice - Medium",
+            "chars": 137,
+            "tavily_score": 0.2107017,
+            "similarity": 0.2175,
+            "too_short": true
+          }
+        ],
+        "min_chars": 300,
+        "min_chars_fallback": false
+      },
+      "post_gate": {
+        "decision": "accept",
+        "reason": "new_connected_facts",
+        "share_of_facts_kept": 0.8,
+        "signals": {
+          "reason": "new_connected_facts",
+          "anchors_found": 4,
+          "entities_total": 21,
+          "entities_kept": 16,
+          "new_entities_kept": 12,
+          "facts_total": 20,
+          "facts_kept": 16,
+          "facts_duplicate": 0,
+          "facts_dropped_unconnected": 4,
+          "fact_conflicts": 0
+        },
+        "kept_entities": [
+          "Lewis Carroll",
+          "Alice's Adventures in Wonderland",
+          "Through the Looking-Glass",
+          "1865",
+          "1871",
+          "Alice",
+          "Carroll",
+          "McGee",
+          "Alice",
+          "McGee",
+          "the game",
+          "Carroll",
+          "Carroll's work",
+          "original novels",
+          "film adaptations",
+          "development team"
+        ],
+        "facts": [
+          {
+            "subject": "Alice's Adventures in Wonderland",
+            "relation": "CREATED_BY",
+            "object": "Lewis Carroll",
+            "relevance": 0.7193,
+            "status": "kept"
+          },
+          {
+            "subject": "Through the Looking-Glass",
+            "relation": "CREATED_BY",
+            "object": "Lewis Carroll",
+            "relevance": 0.6165,
+            "status": "kept"
+          },
+          {
+            "subject": "Alice's Adventures in Wonderland",
+            "relation": "RELATED_TO",
+            "object": "Through the Looking-Glass",
+            "relevance": 0.5071,
+            "status": "kept"
+          },
+          {
+            "subject": "Alice",
+            "relation": "ASSOCIATED_WITH",
+            "object": "Alice's Adventures in Wonderland",
+            "relevance": 0.5728,
+            "status": "kept"
+          },
+          {
+            "subject": "Alice",
+            "relation": "ASSOCIATED_WITH",
+            "object": "Through the Looking-Glass",
+            "relevance": 0.4572,
+            "status": "kept"
+          },
+          {
+            "subject": "Alice",
+            "relation": "RELATED_TO",
+            "object": "family killed in house fire",
+            "relevance": 0.3205,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "Alice",
+            "relation": "ASSOCIATED_WITH",
+            "object": "treatment in psychiatric clinic",
+            "relevance": 0.3056,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "treatment in psychiatric clinic",
+            "relation": "LOCATED_IN",
+            "object": "psychiatric clinic",
+            "relevance": 0.0,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "Alice's Adventures in Wonderland",
+            "relation": "OCCURRED_ON",
+            "object": "1865",
+            "relevance": 0.5266,
+            "status": "kept"
+          },
+          {
+            "subject": "Through the Looking-Glass",
+            "relation": "OCCURRED_ON",
+            "object": "1871",
+            "relevance": 0.1735,
+            "status": "kept"
+          },
+          {
+            "subject": "Alice",
+            "relation": "LOCATED_IN",
+            "object": "psychiatric clinic",
+            "relevance": 0.3201,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "the game",
+            "relation": "CREATED_BY",
+            "object": "McGee",
+            "relevance": 0.5316,
+            "status": "kept"
+          },
+          {
+            "subject": "the game",
+            "relation": "RELATED_TO",
+            "object": "Carroll's work",
+            "relevance": 0.6229,
+            "status": "kept"
+          },
+          {
+            "subject": "the game",
+            "relation": "ASSOCIATED_WITH",
+            "object": "development team",
+            "relevance": 0.1453,
+            "status": "kept"
+          },
+          {
+            "subject": "original novels",
+            "relation": "PART_OF",
+            "object": "Carroll's work",
+            "relevance": 0.6382,
+            "status": "kept"
+          },
+          {
+            "subject": "film adaptations",
+            "relation": "PART_OF",
+            "object": "Carroll's work",
+            "relevance": 0.5615,
+            "status": "kept"
+          },
+          {
+            "subject": "film adaptations",
+            "relation": "RELATED_TO",
+            "object": "original novels",
+            "relevance": 0.1586,
+            "status": "kept"
+          },
+          {
+            "subject": "Carroll",
+            "relation": "RELATED_TO",
+            "object": "Alice",
+            "relevance": 0.6823,
+            "status": "kept"
+          },
+          {
+            "subject": "McGee",
+            "relation": "RELATED_TO",
+            "object": "Alice",
+            "relevance": 0.6656,
+            "status": "kept"
+          },
+          {
+            "subject": "Carroll",
+            "relation": "RELATED_TO",
+            "object": "McGee",
+            "relevance": 0.6689,
+            "status": "kept"
+          }
+        ]
+      },
+      "outcome": "ingested"
+    },
+    {
+      "metric": "non_clique",
+      "target_node": "1871",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:240",
+      "question": "What significant work was published in 1871 that is referenced in the game?",
+      "cluster_resolution": "assigned_by_embedding",
+      "cluster_id": 0,
+      "question_gate_1": {
+        "decision": "accept",
+        "score": 0.4065,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.3129631907865159,
+          "entity": 0.5,
+          "accepted": null,
+          "rejected": null
+        }
+      },
+      "regenerated_question": null,
+      "question_gate_2": null,
+      "final_question": "What significant work was published in 1871 that is referenced in the game?",
+      "retrieval": {
+        "question": "What significant work was published in 1871 that is referenced in the game?",
+        "mode": "best",
+        "chosen_index": 1,
+        "candidates": [
+          {
+            "index": 0,
+            "url": "https://chicagology.com/chicago-fire",
+            "title": "1871—The Great Chicago Fire",
+            "chars": 670,
+            "tavily_score": 0.35079992,
+            "similarity": 0.3372,
+            "too_short": false
+          },
+          {
+            "index": 1,
+            "url": "https://education.nationalgeographic.org/resource/chicago-fire-1871-and-great-rebuilding",
+            "title": "The Chicago Fire of 1871 and the 'Great Rebuilding'",
+            "chars": 1003,
+            "tavily_score": 0.17376469,
+            "similarity": 0.3811,
+            "too_short": false
+          },
+          {
+            "index": 2,
+            "url": "https://www.history.com/articles/what-started-great-chicago-fire",
+            "title": "What Really Started the Great Chicago Fire of 1871? | HISTORY",
+            "chars": 924,
+            "tavily_score": 0.11705663,
+            "similarity": 0.2916,
+            "too_short": false
+          }
+        ],
+        "min_chars": 300,
+        "min_chars_fallback": false
+      },
+      "post_gate": {
+        "decision": "accept",
+        "reason": "new_connected_facts",
+        "share_of_facts_kept": 0.6667,
+        "signals": {
+          "reason": "new_connected_facts",
+          "anchors_found": 2,
+          "entities_total": 6,
+          "entities_kept": 3,
+          "new_entities_kept": 1,
+          "facts_total": 3,
+          "facts_kept": 2,
+          "facts_duplicate": 0,
+          "facts_dropped_unconnected": 1,
+          "fact_conflicts": 0
+        },
+        "kept_entities": [
+          "Great Fire of 1871",
+          "Chicago",
+          "1871"
+        ],
+        "facts": [
+          {
+            "subject": "Terms of Service",
+            "relation": "RELATED_TO",
+            "object": "user permissions",
+            "relevance": 0.0294,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "Great Fire of 1871",
+            "relation": "OCCURRED_ON",
+            "object": "1871",
+            "relevance": 0.4949,
+            "status": "kept"
+          },
+          {
+            "subject": "Great Fire of 1871",
+            "relation": "LOCATED_IN",
+            "object": "Chicago",
+            "relevance": 0.4174,
+            "status": "kept"
+          }
+        ]
+      },
+      "outcome": "ingested"
+    },
+    {
+      "metric": "non_clique",
+      "target_node": "Alice: Asylum",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:100",
+      "question": "What is the planned storyline or gameplay focus of the unreleased project \"Alice: Asylum\"?",
+      "cluster_resolution": "seed",
+      "cluster_id": 1,
+      "question_gate_1": {
+        "decision": "reject",
+        "score": 0.4947,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.4894359662648797,
+          "entity": 0.5,
+          "accepted": null,
+          "rejected": null
+        }
+      },
+      "regenerated_question": "Which Patreon creator posted the concept details for the unreleased game Alice: Asylum?",
+      "question_gate_2": {
+        "decision": "reject",
+        "score": 0.5103,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.5206385537255833,
+          "entity": 0.5,
+          "accepted": null,
+          "rejected": null
+        }
+      },
+      "final_question": null,
+      "retrieval": null,
+      "post_gate": null,
+      "outcome": "skipped_by_question_gate"
+    },
+    {
+      "metric": "clustering",
+      "target_node": "Through the Looking-Glass",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:232",
+      "question": "What novel precedes \"Through the Looking-Glass\" as its original source material?",
+      "cluster_resolution": "assigned_by_embedding",
+      "cluster_id": 0,
+      "question_gate_1": {
+        "decision": "accept",
+        "score": 0.3752,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.31249718823604095,
+          "entity": 0.5,
+          "accepted": 0.28189244806215774,
+          "rejected": null
+        }
+      },
+      "regenerated_question": null,
+      "question_gate_2": null,
+      "final_question": "What novel precedes \"Through the Looking-Glass\" as its original source material?",
+      "retrieval": {
+        "question": "What novel precedes \"Through the Looking-Glass\" as its original source material?",
+        "mode": "best",
+        "chosen_index": 2,
+        "candidates": [
+          {
+            "index": 0,
+            "url": "https://en.wikipedia.org/wiki/Through_the_Looking-Glass",
+            "title": "Through the Looking-Glass - Wikipedia",
+            "chars": 1138,
+            "tavily_score": 0.8506799,
+            "similarity": 0.4299,
+            "too_short": false
+          },
+          {
+            "index": 1,
+            "url": "https://www.encyclopedia.com/arts/educational-magazines/through-looking-glass",
+            "title": "Through the Looking-Glass | Encyclopedia.com",
+            "chars": 1481,
+            "tavily_score": 0.7574541,
+            "similarity": 0.4687,
+            "too_short": false
+          },
+          {
+            "index": 2,
+            "url": "https://www.britannica.com/topic/Through-the-Looking-Glass",
+            "title": "Through the Looking-Glass | Fantasy, Adventure, Sequel",
+            "chars": 991,
+            "tavily_score": 0.74363416,
+            "similarity": 0.6218,
+            "too_short": false
+          }
+        ],
+        "min_chars": 300,
+        "min_chars_fallback": false
+      },
+      "post_gate": {
+        "decision": "accept",
+        "reason": "new_connected_facts",
+        "share_of_facts_kept": 0.6429,
+        "signals": {
+          "reason": "new_connected_facts",
+          "anchors_found": 5,
+          "entities_total": 17,
+          "entities_kept": 12,
+          "new_entities_kept": 7,
+          "facts_total": 14,
+          "facts_kept": 9,
+          "facts_duplicate": 1,
+          "facts_dropped_unconnected": 4,
+          "fact_conflicts": 0
+        },
+        "kept_entities": [
+          "Lewis Carroll",
+          "Alice’s Adventures in Wonderland",
+          "Through the Looking Glass",
+          "Through the Looking-Glass",
+          "Lewis Carroll",
+          "1872",
+          "December 1871",
+          "Alice’s Adventures in Wonderland",
+          "Alice",
+          "Chessboards",
+          "Chess pieces",
+          "Mirror"
+        ],
+        "facts": [
+          {
+            "subject": "Through the Looking-Glass",
+            "relation": "CREATED_BY",
+            "object": "Lewis Carroll",
+            "relevance": 0.6208,
+            "status": "duplicate"
+          },
+          {
+            "subject": "Through the Looking-Glass",
+            "relation": "RELATED_TO",
+            "object": "1872",
+            "relevance": 0.6128,
+            "status": "kept"
+          },
+          {
+            "subject": "Through the Looking-Glass",
+            "relation": "RELATED_TO",
+            "object": "December 1871",
+            "relevance": 0.506,
+            "status": "kept"
+          },
+          {
+            "subject": "Through the Looking-Glass",
+            "relation": "RELATED_TO",
+            "object": "Alice’s Adventures in Wonderland",
+            "relevance": 0.5613,
+            "status": "kept"
+          },
+          {
+            "subject": "Through the Looking-Glass",
+            "relation": "RELATED_TO",
+            "object": "Alice",
+            "relevance": 0.5448,
+            "status": "kept"
+          },
+          {
+            "subject": "Through the Looking-Glass",
+            "relation": "RELATED_TO",
+            "object": "Chessboards",
+            "relevance": 0.412,
+            "status": "kept"
+          },
+          {
+            "subject": "Through the Looking-Glass",
+            "relation": "RELATED_TO",
+            "object": "Chess pieces",
+            "relevance": 0.5124,
+            "status": "kept"
+          },
+          {
+            "subject": "Through the Looking-Glass",
+            "relation": "RELATED_TO",
+            "object": "Mirror",
+            "relevance": 0.5548,
+            "status": "kept"
+          },
+          {
+            "subject": "Alice’s Adventures in Wonderland",
+            "relation": "CREATED_BY",
+            "object": "Lewis Carroll",
+            "relevance": 0.3243,
+            "status": "kept"
+          },
+          {
+            "subject": "Through the Looking Glass",
+            "relation": "CREATED_BY",
+            "object": "Lewis Carroll",
+            "relevance": 0.6439,
+            "status": "kept"
+          },
+          {
+            "subject": "The Child’s Body and the Novelistic Subject",
+            "relation": "PART_OF",
+            "object": "The Criterion: An International Journal in English",
+            "relevance": 0.2705,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "Explorations into the Real: The Fantastic Deconstruction of Childhood",
+            "relation": "PART_OF",
+            "object": "The Criterion: An International Journal in English",
+            "relevance": 0.2143,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "The Criterion: An International Journal in English",
+            "relation": "RELATED_TO",
+            "object": "Humanities LibreTexts",
+            "relevance": 0.2162,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "Humanities LibreTexts",
+            "relation": "ASSOCIATED_WITH",
+            "object": "Literary Snapshot",
+            "relevance": 0.3305,
+            "status": "dropped_unconnected"
+          }
+        ]
+      },
+      "outcome": "ingested"
+    },
+    {
+      "metric": "clustering",
+      "target_node": "Great Fire of 1871",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:7",
+      "question": "In which city did the Great Fire of 1871 take place?",
+      "cluster_resolution": "assigned_by_embedding",
+      "cluster_id": 0,
+      "question_gate_1": {
+        "decision": "reject",
+        "score": 0.4099,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.07171251756673468,
+          "entity": 0.75,
+          "accepted": 0.4072108786798889,
+          "rejected": null
+        }
+      },
+      "regenerated_question": "What other major urban fires occurred in 1871 alongside the Great Fire of 1871?",
+      "question_gate_2": {
+        "decision": "reject",
+        "score": 0.4,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.043836058588295146,
+          "entity": 0.75,
+          "accepted": 0.409220409912469,
+          "rejected": null
+        }
+      },
+      "final_question": null,
+      "retrieval": null,
+      "post_gate": null,
+      "outcome": "skipped_by_question_gate"
+    },
+    {
+      "metric": "degree",
+      "target_node": "EA",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:174",
+      "question": "What role did EA play in the publishing or distribution of American McGee's Alice?",
+      "cluster_resolution": "seed",
+      "cluster_id": 0,
+      "question_gate_1": {
+        "decision": "accept",
+        "score": 0.6972,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.7402388354226739,
+          "entity": 0.75,
+          "accepted": 0.25069829305751357,
+          "rejected": 0.0
+        }
+      },
+      "regenerated_question": null,
+      "question_gate_2": null,
+      "final_question": "What role did EA play in the publishing or distribution of American McGee's Alice?",
+      "retrieval": {
+        "question": "What role did EA play in the publishing or distribution of American McGee's Alice?",
+        "mode": "best",
+        "chosen_index": 1,
+        "candidates": [
+          {
+            "index": 0,
+            "url": "https://en.wikipedia.org/wiki/American_McGee%27s_Alice",
+            "title": "American McGee's Alice - Wikipedia",
+            "chars": 1199,
+            "tavily_score": 0.8380581,
+            "similarity": 0.6503,
+            "too_short": false
+          },
+          {
+            "index": 1,
+            "url": "https://www.gamesindustry.biz/american-mcgee-steps-away-from-development-as-ea-turns-down-alice-asylum",
+            "title": "American McGee steps away from development as EA turns down Alice: Asylum | GamesIndustry.biz",
+            "chars": 773,
+            "tavily_score": 0.65279555,
+            "similarity": 0.7914,
+            "too_short": false
+          },
+          {
+            "index": 2,
+            "url": "https://www.youtube.com/watch?v=ZHR6IAxFjsg",
+            "title": "Why Did EA Kill Alice: Asylum?",
+            "chars": 1217,
+            "tavily_score": 0.5954225,
+            "similarity": 0.6729,
+            "too_short": false
+          }
+        ],
+        "min_chars": 300,
+        "min_chars_fallback": false
+      },
+      "post_gate": {
+        "decision": "accept",
+        "reason": "new_connected_facts",
+        "share_of_facts_kept": 1.0,
+        "signals": {
+          "reason": "new_connected_facts",
+          "anchors_found": 2,
+          "entities_total": 5,
+          "entities_kept": 5,
+          "new_entities_kept": 3,
+          "facts_total": 3,
+          "facts_kept": 3,
+          "facts_duplicate": 0,
+          "facts_dropped_unconnected": 0,
+          "fact_conflicts": 0
+        },
+        "kept_entities": [
+          "McGee",
+          "Electronic Arts",
+          "Alice IP",
+          "blog post",
+          "publisher"
+        ],
+        "facts": [
+          {
+            "subject": "Electronic Arts",
+            "relation": "OWNS",
+            "object": "Alice IP",
+            "relevance": 0.5867,
+            "status": "kept"
+          },
+          {
+            "subject": "blog post",
+            "relation": "CREATED_BY",
+            "object": "McGee",
+            "relevance": 0.5013,
+            "status": "kept"
+          },
+          {
+            "subject": "publisher",
+            "relation": "RELATED_TO",
+            "object": "McGee",
+            "relevance": 0.6953,
+            "status": "kept"
+          }
+        ]
+      },
+      "outcome": "ingested"
+    },
+    {
+      "metric": "degree",
+      "target_node": "Chess pieces",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:19",
+      "question": "How are chess pieces used as gameplay mechanics or narrative elements in American McGee's Alice?",
+      "cluster_resolution": "assigned_by_embedding",
+      "cluster_id": 0,
+      "question_gate_1": {
+        "decision": "accept",
+        "score": 0.6417,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.5759663043922039,
+          "entity": 0.5,
+          "accepted": 0.5943571788925629,
+          "rejected": 0.0
+        }
+      },
+      "regenerated_question": null,
+      "question_gate_2": null,
+      "final_question": "How are chess pieces used as gameplay mechanics or narrative elements in American McGee's Alice?",
+      "retrieval": {
+        "question": "How are chess pieces used as gameplay mechanics or narrative elements in American McGee's Alice?",
+        "mode": "best",
+        "chosen_index": 0,
+        "candidates": [
+          {
+            "index": 0,
+            "url": "https://kenpriebe.substack.com/p/through-the-looking-glass-the-chess",
+            "title": "THROUGH THE LOOKING GLASS: The Chess Game - by Ken Priebe",
+            "chars": 1012,
+            "tavily_score": 0.48733237,
+            "similarity": 0.6964,
+            "too_short": false
+          },
+          {
+            "index": 1,
+            "url": "https://www.chess.com/blog/introuble2/alice-through-the-looking-glass-some-chess-visual-imagination",
+            "title": "Alice through the looking glass... some chess visual imagination - Chess.com",
+            "chars": 902,
+            "tavily_score": 0.46905875,
+            "similarity": 0.6945,
+            "too_short": false
+          },
+          {
+            "index": 2,
+            "url": "https://www.houseofstaunton.com/blogs/chess-boards/variants-on-a-chess-board",
+            "title": "14 Variants to Play on a Chess Board – House of Staunton",
+            "chars": 480,
+            "tavily_score": 0.18233846,
+            "similarity": 0.4038,
+            "too_short": false
+          }
+        ],
+        "min_chars": 300,
+        "min_chars_fallback": false
+      },
+      "post_gate": {
+        "decision": "reject",
+        "reason": "no_anchor_in_extraction",
+        "share_of_facts_kept": 0.0,
+        "signals": {
+          "reason": "no_anchor_in_extraction",
+          "anchors_found": 0,
+          "entities_total": 0,
+          "entities_kept": 0,
+          "new_entities_kept": 0,
+          "facts_total": 0,
+          "facts_kept": 0,
+          "facts_duplicate": 0,
+          "facts_dropped_unconnected": 0,
+          "fact_conflicts": 0
+        },
+        "kept_entities": [],
+        "facts": []
+      },
+      "outcome": "rejected_by_post_gate"
+    },
+    {
+      "metric": "betweenness",
+      "target_node": "blog post",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:30",
+      "question": "On what date was the blog post published in which McGee announced resuming talks with Electronic Arts?",
+      "cluster_resolution": "assigned_by_embedding",
+      "cluster_id": 2,
+      "question_gate_1": {
+        "decision": "accept",
+        "score": 0.7336,
+        "path": "deterministic",
+        "signals": {
+          "semantic": 0.6290999263760869,
+          "entity": 1.0,
+          "accepted": 0.4907126519037438,
+          "rejected": null
+        }
+      },
+      "regenerated_question": null,
+      "question_gate_2": null,
+      "final_question": "On what date was the blog post published in which McGee announced resuming talks with Electronic Arts?",
+      "retrieval": {
+        "question": "On what date was the blog post published in which McGee announced resuming talks with Electronic Arts?",
+        "mode": "best",
+        "chosen_index": 1,
+        "candidates": [
+          {
+            "index": 0,
+            "url": "https://www.gamesindustry.biz/american-mcgee-steps-away-from-development-as-ea-turns-down-alice-asylum",
+            "title": "American McGee steps away from development as EA turns down Alice: Asylum | GamesIndustry.biz",
+            "chars": 1269,
+            "tavily_score": 0.8536326,
+            "similarity": 0.565,
+            "too_short": false
+          },
+          {
+            "index": 1,
+            "url": "https://www.thegamer.com/american-mcgee-alice-spiritual-successor-announcement",
+            "title": "American McGee Announces A \"Spiritual Sequel\" To Alice Returns",
+            "chars": 402,
+            "tavily_score": 0.52773094,
+            "similarity": 0.637,
+            "too_short": false
+          },
+          {
+            "index": 2,
+            "url": "https://inetventures.com/article-date-finder",
+            "title": "URL Date Extractor - Find When Any Page Was Published | Free Tool",
+            "chars": 1273,
+            "tavily_score": 0.08459118,
+            "similarity": 0.1743,
+            "too_short": false
+          }
+        ],
+        "min_chars": 300,
+        "min_chars_fallback": false
+      },
+      "post_gate": {
+        "decision": "reject",
+        "reason": "no_anchor_in_extraction",
+        "share_of_facts_kept": 0.0,
+        "signals": {
+          "reason": "no_anchor_in_extraction",
+          "anchors_found": 0,
+          "entities_total": 6,
+          "entities_kept": 0,
+          "new_entities_kept": 0,
+          "facts_total": 5,
+          "facts_kept": 0,
+          "facts_duplicate": 0,
+          "facts_dropped_unconnected": 5,
+          "fact_conflicts": 0
+        },
+        "kept_entities": [],
+        "facts": [
+          {
+            "subject": "Electronic Arts",
+            "relation": "RELATED_TO",
+            "object": "Alice",
+            "relevance": 0.425,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "American McGee",
+            "relation": "ASSOCIATED_WITH",
+            "object": "new project",
+            "relevance": 0.6687,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "Plushie Dreadfuls",
+            "relation": "CREATED_BY",
+            "object": "American McGee",
+            "relevance": 0.3397,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "American McGee",
+            "relation": "ASSOCIATED_WITH",
+            "object": "Alice",
+            "relevance": 0.5625,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "Mar 8, 2026",
+            "relation": "OCCURRED_ON",
+            "object": "new project",
+            "relevance": 0.2251,
+            "status": "dropped_unconnected"
+          }
+        ]
+      },
+      "outcome": "rejected_by_post_gate"
+    },
+    {
+      "metric": "betweenness",
+      "target_node": "film adaptations",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:218",
+      "question": "Which specific film adaptations of Lewis Carroll’s works were explicitly ignored by the development team?",
+      "cluster_resolution": "assigned_by_embedding",
+      "cluster_id": 2,
+      "question_gate_1": {
+        "decision": "reject",
+        "score": 0.5605,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.4449681102707202,
+          "entity": 0.5,
+          "accepted": 0.5888846303792629,
+          "rejected": 0.20375988144826732
+        }
+      },
+      "regenerated_question": "How have film adaptations of Lewis Carroll’s works influenced subsequent video game narratives or design choices?",
+      "question_gate_2": {
+        "decision": "accept",
+        "score": 0.5689,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.50023232580253,
+          "entity": 0.5,
+          "accepted": 0.5842065217440974,
+          "rejected": 0.24003611286401064
+        }
+      },
+      "final_question": "How have film adaptations of Lewis Carroll’s works influenced subsequent video game narratives or design choices?",
+      "retrieval": {
+        "question": "How have film adaptations of Lewis Carroll’s works influenced subsequent video game narratives or design choices?",
+        "mode": "best",
+        "chosen_index": 1,
+        "candidates": [
+          {
+            "index": 0,
+            "url": "https://www.pczone.co.uk/the-best-video-games-inspired-by-lewis-carrolls-alice-in-wonderland",
+            "title": "The Best Video Games Inspired By Lewis Carroll’s Alice In Wonderland | PCZ",
+            "chars": 944,
+            "tavily_score": 0.6016175,
+            "similarity": 0.6536,
+            "too_short": false
+          },
+          {
+            "index": 1,
+            "url": "https://www.scribd.com/document/708422814/no-ntnu-inspera-80303918-15529338",
+            "title": "Modern Adaptations of Alice's Wonderland | PDF | Through The Looking Glass | Alice's Adventures In Wonderland",
+            "chars": 1122,
+            "tavily_score": 0.5954225,
+            "similarity": 0.7113,
+            "too_short": false
+          },
+          {
+            "index": 2,
+            "url": "https://en.wikipedia.org/wiki/Works_based_on_Alice_in_Wonderland",
+            "title": "Works based on Alice in Wonderland - Wikipedia",
+            "chars": 852,
+            "tavily_score": 0.37223184,
+            "similarity": 0.4426,
+            "too_short": false
+          }
+        ],
+        "min_chars": 300,
+        "min_chars_fallback": false
+      },
+      "post_gate": {
+        "decision": "accept",
+        "reason": "new_connected_facts",
+        "share_of_facts_kept": 0.3548,
+        "signals": {
+          "reason": "new_connected_facts",
+          "anchors_found": 3,
+          "entities_total": 39,
+          "entities_kept": 12,
+          "new_entities_kept": 9,
+          "facts_total": 31,
+          "facts_kept": 11,
+          "facts_duplicate": 2,
+          "facts_dropped_unconnected": 18,
+          "fact_conflicts": 0
+        },
+        "kept_entities": [
+          "Lewis Carroll",
+          "Alice's Wonderland",
+          "identity",
+          "Modern Adaptations of Alice's Wonderland",
+          "narrative",
+          "themes",
+          "Wonderland's setting",
+          "darker tone",
+          "Lewis Carroll",
+          "Alice's Adventures in Wonderland",
+          "thesis",
+          "Through the Looking-Glass"
+        ],
+        "facts": [
+          {
+            "subject": "Alice's Adventures in Wonderland",
+            "relation": "CREATED_BY",
+            "object": "Lewis Carroll",
+            "relevance": 0.6356,
+            "status": "duplicate"
+          },
+          {
+            "subject": "Through the Looking-Glass",
+            "relation": "CREATED_BY",
+            "object": "Lewis Carroll",
+            "relevance": 0.555,
+            "status": "duplicate"
+          },
+          {
+            "subject": "Alice",
+            "relation": "CREATED_BY",
+            "object": "Nick Willing",
+            "relevance": 0.275,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "Alice",
+            "relation": "OCCURRED_ON",
+            "object": "2009",
+            "relevance": 0.0639,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "Alice video game series",
+            "relation": "CREATED_BY",
+            "object": "American McGee",
+            "relevance": 0.4316,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "Alice video game series",
+            "relation": "OCCURRED_ON",
+            "object": "2000",
+            "relevance": 0.3009,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "Alice video game series",
+            "relation": "OCCURRED_ON",
+            "object": "2011",
+            "relevance": 0.2846,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "thesis",
+            "relation": "ASSOCIATED_WITH",
+            "object": "ecocriticism",
+            "relevance": 0.1382,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "ecocriticism",
+            "relation": "RELATED_TO",
+            "object": "children",
+            "relevance": 0.1147,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "ecocriticism",
+            "relation": "RELATED_TO",
+            "object": "nature",
+            "relevance": 0.1099,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "ecocriticism",
+            "relation": "RELATED_TO",
+            "object": "environments",
+            "relevance": 0.171,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "ecocriticism",
+            "relation": "RELATED_TO",
+            "object": "societal values",
+            "relevance": 0.1245,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "thesis",
+            "relation": "RELATED_TO",
+            "object": "Alice's Adventures in Wonderland",
+            "relevance": 0.4443,
+            "status": "kept"
+          },
+          {
+            "subject": "thesis",
+            "relation": "RELATED_TO",
+            "object": "Through the Looking-Glass",
+            "relevance": 0.248,
+            "status": "kept"
+          },
+          {
+            "subject": "thesis",
+            "relation": "RELATED_TO",
+            "object": "Alice",
+            "relevance": 0.2515,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "thesis",
+            "relation": "RELATED_TO",
+            "object": "Alice video game series",
+            "relevance": 0.4568,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "Alice's Wonderland",
+            "relation": "CREATED_BY",
+            "object": "Lewis Carroll",
+            "relevance": 0.6063,
+            "status": "kept"
+          },
+          {
+            "subject": "Alice's Wonderland",
+            "relation": "LOCATED_IN",
+            "object": "Wonderland's setting",
+            "relevance": 0.4284,
+            "status": "kept"
+          },
+          {
+            "subject": "the thesis",
+            "relation": "RELATED_TO",
+            "object": "environment",
+            "relevance": 0.1721,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "environment",
+            "relation": "RELATED_TO",
+            "object": "societal values",
+            "relevance": 0.1736,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "Modern Adaptations of Alice's Wonderland",
+            "relation": "RELATED_TO",
+            "object": "narrative",
+            "relevance": 0.6596,
+            "status": "kept"
+          },
+          {
+            "subject": "Modern Adaptations of Alice's Wonderland",
+            "relation": "RELATED_TO",
+            "object": "themes",
+            "relevance": 0.5964,
+            "status": "kept"
+          },
+          {
+            "subject": "Modern Adaptations of Alice's Wonderland",
+            "relation": "RELATED_TO",
+            "object": "Wonderland's setting",
+            "relevance": 0.582,
+            "status": "kept"
+          },
+          {
+            "subject": "Modern Adaptations of Alice's Wonderland",
+            "relation": "RELATED_TO",
+            "object": "darker tone",
+            "relevance": 0.5256,
+            "status": "kept"
+          },
+          {
+            "subject": "darker tone",
+            "relation": "RELATED_TO",
+            "object": "Alice's Wonderland",
+            "relevance": 0.3462,
+            "status": "kept"
+          },
+          {
+            "subject": "Modern Adaptations of Alice's Wonderland",
+            "relation": "RELATED_TO",
+            "object": "identity",
+            "relevance": 0.5314,
+            "status": "kept"
+          },
+          {
+            "subject": "Modern Adaptations of Alice's Wonderland",
+            "relation": "RELATED_TO",
+            "object": "Alice's Wonderland",
+            "relevance": 0.5762,
+            "status": "kept"
+          },
+          {
+            "subject": "Scribd",
+            "relation": "RELATED_TO",
+            "object": "App Store",
+            "relevance": 0.0807,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "Scribd",
+            "relation": "RELATED_TO",
+            "object": "Google Play",
+            "relevance": 0.1199,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "Get our free apps",
+            "relation": "RELATED_TO",
+            "object": "App Store",
+            "relevance": 0.0118,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "Get our free apps",
+            "relation": "RELATED_TO",
+            "object": "Google Play",
+            "relevance": 0.0561,
+            "status": "dropped_unconnected"
+          }
+        ]
+      },
+      "outcome": "ingested"
+    },
+    {
+      "metric": "diameter",
+      "target_node": "American McGee",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:168",
+      "question": "What is the primary profession or notable role of American McGee?",
+      "cluster_resolution": "seed",
+      "cluster_id": 0,
+      "question_gate_1": {
+        "decision": "accept",
+        "score": 0.527,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.5012881034353606,
+          "entity": 0.5,
+          "accepted": 0.6692770191684154,
+          "rejected": 0.5359806236769442
+        }
+      },
+      "regenerated_question": null,
+      "question_gate_2": null,
+      "final_question": "What is the primary profession or notable role of American McGee?",
+      "retrieval": {
+        "question": "What is the primary profession or notable role of American McGee?",
+        "mode": "best",
+        "chosen_index": 0,
+        "candidates": [
+          {
+            "index": 0,
+            "url": "https://www.smartbrief.com/authors/american-mcgee",
+            "title": "American McGee - SmartBrief",
+            "chars": 669,
+            "tavily_score": 0.7900289,
+            "similarity": 0.68,
+            "too_short": false
+          },
+          {
+            "index": 1,
+            "url": "https://en.wikipedia.org/wiki/American_McGee",
+            "title": "American McGee - Wikipedia",
+            "chars": 1072,
+            "tavily_score": 0.7407191,
+            "similarity": 0.6154,
+            "too_short": false
+          },
+          {
+            "index": 2,
+            "url": "https://www.gamedesignworkshop.com/american-mcgee",
+            "title": "American McGee — Game Design Workshop",
+            "chars": 970,
+            "tavily_score": 0.69249696,
+            "similarity": 0.5527,
+            "too_short": false
+          }
+        ],
+        "min_chars": 300,
+        "min_chars_fallback": false
+      },
+      "post_gate": {
+        "decision": "accept",
+        "reason": "new_connected_facts",
+        "share_of_facts_kept": 1.0,
+        "signals": {
+          "reason": "new_connected_facts",
+          "anchors_found": 1,
+          "entities_total": 4,
+          "entities_kept": 4,
+          "new_entities_kept": 3,
+          "facts_total": 3,
+          "facts_kept": 3,
+          "facts_duplicate": 0,
+          "facts_dropped_unconnected": 0,
+          "fact_conflicts": 0
+        },
+        "kept_entities": [
+          "American McGee",
+          "3 lessons you’ll only learn by switching industries",
+          "12/05/25",
+          "CareersLeadership"
+        ],
+        "facts": [
+          {
+            "subject": "3 lessons you’ll only learn by switching industries",
+            "relation": "CREATED_BY",
+            "object": "American McGee",
+            "relevance": 0.6088,
+            "status": "kept"
+          },
+          {
+            "subject": "3 lessons you’ll only learn by switching industries",
+            "relation": "OCCURRED_ON",
+            "object": "12/05/25",
+            "relevance": 0.14,
+            "status": "kept"
+          },
+          {
+            "subject": "American McGee",
+            "relation": "ASSOCIATED_WITH",
+            "object": "CareersLeadership",
+            "relevance": 0.8366,
+            "status": "kept"
+          }
+        ]
+      },
+      "outcome": "ingested"
+    },
+    {
+      "metric": "diameter",
+      "target_node": "American McGee's Alice",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:187",
+      "question": "In what year was the video game American McGee's Alice originally released?",
+      "cluster_resolution": "seed",
+      "cluster_id": 0,
+      "question_gate_1": {
+        "decision": "accept",
+        "score": 0.6877,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.7364793975534609,
+          "entity": 0.75,
+          "accepted": 0.7987062730149399,
+          "rejected": 0.5897421313220006
+        }
+      },
+      "regenerated_question": null,
+      "question_gate_2": null,
+      "final_question": "In what year was the video game American McGee's Alice originally released?",
+      "retrieval": {
+        "question": "In what year was the video game American McGee's Alice originally released?",
+        "mode": "best",
+        "chosen_index": 0,
+        "candidates": [
+          {
+            "index": 0,
+            "url": "https://en.wikipedia.org/wiki/American_McGee%27s_Alice",
+            "title": "American McGee's Alice - Wikipedia",
+            "chars": 1449,
+            "tavily_score": 0.942385,
+            "similarity": 0.7412,
+            "too_short": false
+          },
+          {
+            "index": 1,
+            "url": "https://alice.fandom.com/wiki/American_McGee%27s_Alice",
+            "title": "American McGee's Alice - Alice Wiki - Fandom",
+            "chars": 160,
+            "tavily_score": 0.8921218,
+            "similarity": 0.7771,
+            "too_short": true
+          },
+          {
+            "index": 2,
+            "url": "https://www.pcgamingwiki.com/wiki/American_McGee%27s_Alice",
+            "title": "American McGee's Alice",
+            "chars": 1209,
+            "tavily_score": 0.7923522,
+            "similarity": 0.7304,
+            "too_short": false
+          }
+        ],
+        "min_chars": 300,
+        "min_chars_fallback": false
+      },
+      "post_gate": {
+        "decision": "accept",
+        "reason": "new_connected_facts",
+        "share_of_facts_kept": 1.0,
+        "signals": {
+          "reason": "new_connected_facts",
+          "anchors_found": 4,
+          "entities_total": 25,
+          "entities_kept": 23,
+          "new_entities_kept": 19,
+          "facts_total": 21,
+          "facts_kept": 21,
+          "facts_duplicate": 0,
+          "facts_dropped_unconnected": 0,
+          "fact_conflicts": 0
+        },
+        "kept_entities": [
+          "Alice: Madness Returns",
+          "June 14, 2011",
+          "Mac",
+          "Xbox 360",
+          "PlayStation 3",
+          "North America",
+          "June 16, 2011",
+          "Europe",
+          "June 17, 2011",
+          "United Kingdom",
+          "July 21, 2011",
+          "Japan",
+          "PC",
+          "American McGee's Alice",
+          "American McGee",
+          "2000",
+          "Rogue Entertainment",
+          "Electronic Arts",
+          "EA Games",
+          "Windows",
+          "Mac OS",
+          "PlayStation 3",
+          "Xbox 360"
+        ],
+        "facts": [
+          {
+            "subject": "American McGee's Alice",
+            "relation": "CREATED_BY",
+            "object": "Rogue Entertainment",
+            "relevance": 0.8175,
+            "status": "kept"
+          },
+          {
+            "subject": "American McGee's Alice",
+            "relation": "RELATED_TO",
+            "object": "American McGee",
+            "relevance": 0.7613,
+            "status": "kept"
+          },
+          {
+            "subject": "American McGee's Alice",
+            "relation": "RELATED_TO",
+            "object": "Electronic Arts",
+            "relevance": 0.7553,
+            "status": "kept"
+          },
+          {
+            "subject": "EA Games",
+            "relation": "PART_OF",
+            "object": "Electronic Arts",
+            "relevance": 0.3666,
+            "status": "kept"
+          },
+          {
+            "subject": "American McGee's Alice",
+            "relation": "RELATED_TO",
+            "object": "Windows",
+            "relevance": 0.6965,
+            "status": "kept"
+          },
+          {
+            "subject": "American McGee's Alice",
+            "relation": "RELATED_TO",
+            "object": "Mac OS",
+            "relevance": 0.719,
+            "status": "kept"
+          },
+          {
+            "subject": "American McGee's Alice",
+            "relation": "RELATED_TO",
+            "object": "PlayStation 3",
+            "relevance": 0.7913,
+            "status": "kept"
+          },
+          {
+            "subject": "American McGee's Alice",
+            "relation": "RELATED_TO",
+            "object": "Xbox 360",
+            "relevance": 0.7881,
+            "status": "kept"
+          },
+          {
+            "subject": "American McGee's Alice",
+            "relation": "OCCURRED_ON",
+            "object": "2000",
+            "relevance": 0.8002,
+            "status": "kept"
+          },
+          {
+            "subject": "Alice: Madness Returns",
+            "relation": "OCCURRED_ON",
+            "object": "June 14, 2011",
+            "relevance": 0.4436,
+            "status": "kept"
+          },
+          {
+            "subject": "Alice: Madness Returns",
+            "relation": "LOCATED_IN",
+            "object": "North America",
+            "relevance": 0.4669,
+            "status": "kept"
+          },
+          {
+            "subject": "Alice: Madness Returns",
+            "relation": "OCCURRED_ON",
+            "object": "June 16, 2011",
+            "relevance": 0.4476,
+            "status": "kept"
+          },
+          {
+            "subject": "Alice: Madness Returns",
+            "relation": "LOCATED_IN",
+            "object": "Europe",
+            "relevance": 0.4103,
+            "status": "kept"
+          },
+          {
+            "subject": "Alice: Madness Returns",
+            "relation": "OCCURRED_ON",
+            "object": "June 17, 2011",
+            "relevance": 0.445,
+            "status": "kept"
+          },
+          {
+            "subject": "Alice: Madness Returns",
+            "relation": "LOCATED_IN",
+            "object": "United Kingdom",
+            "relevance": 0.4139,
+            "status": "kept"
+          },
+          {
+            "subject": "Alice: Madness Returns",
+            "relation": "OCCURRED_ON",
+            "object": "July 21, 2011",
+            "relevance": 0.4497,
+            "status": "kept"
+          },
+          {
+            "subject": "Alice: Madness Returns",
+            "relation": "LOCATED_IN",
+            "object": "Japan",
+            "relevance": 0.3826,
+            "status": "kept"
+          },
+          {
+            "subject": "Alice: Madness Returns",
+            "relation": "ASSOCIATED_WITH",
+            "object": "PC",
+            "relevance": 0.3407,
+            "status": "kept"
+          },
+          {
+            "subject": "Alice: Madness Returns",
+            "relation": "ASSOCIATED_WITH",
+            "object": "Mac",
+            "relevance": 0.3309,
+            "status": "kept"
+          },
+          {
+            "subject": "Alice: Madness Returns",
+            "relation": "ASSOCIATED_WITH",
+            "object": "Xbox 360",
+            "relevance": 0.4081,
+            "status": "kept"
+          },
+          {
+            "subject": "Alice: Madness Returns",
+            "relation": "ASSOCIATED_WITH",
+            "object": "PlayStation 3",
+            "relevance": 0.3897,
+            "status": "kept"
+          }
+        ]
+      },
+      "outcome": "ingested"
+    },
+    {
+      "metric": "louvain",
+      "target_node": "Windows",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:60",
+      "question": "Which publisher released the Windows version of American McGee's Alice?",
+      "cluster_resolution": "assigned_by_embedding",
+      "cluster_id": 2,
+      "question_gate_1": {
+        "decision": "accept",
+        "score": 0.7754,
+        "path": "deterministic",
+        "signals": {
+          "semantic": 0.8241798962650768,
+          "entity": 1.0,
+          "accepted": 0.7003042502251158,
+          "rejected": 0.5597003362650393
+        }
+      },
+      "regenerated_question": null,
+      "question_gate_2": null,
+      "final_question": "Which publisher released the Windows version of American McGee's Alice?",
+      "retrieval": {
+        "question": "Which publisher released the Windows version of American McGee's Alice?",
+        "mode": "best",
+        "chosen_index": 2,
+        "candidates": [
+          {
+            "index": 0,
+            "url": "https://en.wikipedia.org/wiki/American_McGee%27s_Alice",
+            "title": "American McGee's Alice - Wikipedia",
+            "chars": 1421,
+            "tavily_score": 0.93554133,
+            "similarity": 0.7592,
+            "too_short": false
+          },
+          {
+            "index": 1,
+            "url": "https://www.vgmpf.com/Wiki/index.php?title=American_McGee%27s_Alice_%28W32%29",
+            "title": "American McGee's Alice (W32) - Video Game Music Preservation Foundation Wiki",
+            "chars": 1441,
+            "tavily_score": 0.8961153,
+            "similarity": 0.6525,
+            "too_short": false
+          },
+          {
+            "index": 2,
+            "url": "https://www.gamedeveloper.com/business/vintage-pc-game-i-american-mcgee-s-alice-i-to-receive-console-port",
+            "title": "Vintage PC Game American McGee's Alice To Receive Console Port",
+            "chars": 496,
+            "tavily_score": 0.8458536,
+            "similarity": 0.8147,
+            "too_short": false
+          }
+        ],
+        "min_chars": 300,
+        "min_chars_fallback": false
+      },
+      "post_gate": {
+        "decision": "reject",
+        "reason": "no_anchor_in_extraction",
+        "share_of_facts_kept": 0.0,
+        "signals": {
+          "reason": "no_anchor_in_extraction",
+          "anchors_found": 0,
+          "entities_total": 0,
+          "entities_kept": 0,
+          "new_entities_kept": 0,
+          "facts_total": 0,
+          "facts_kept": 0,
+          "facts_duplicate": 0,
+          "facts_dropped_unconnected": 0,
+          "fact_conflicts": 0
+        },
+        "kept_entities": [],
+        "facts": []
+      },
+      "outcome": "rejected_by_post_gate"
+    },
+    {
+      "metric": "louvain",
+      "target_node": "PlayStation 3",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:62",
+      "question": "On which date was the PlayStation 3 version of the game released?",
+      "cluster_resolution": "assigned_by_embedding",
+      "cluster_id": 2,
+      "question_gate_1": {
+        "decision": "reject",
+        "score": 0.2622,
+        "path": "deterministic",
+        "signals": {
+          "semantic": 0.21468839023573846,
+          "entity": 0.0,
+          "accepted": 0.18454046424777348,
+          "rejected": 0.19581750265623526
+        }
+      },
+      "regenerated_question": "What is the name of the game that was released digitally for the PlayStation 3 via downloadable content for its sequel?",
+      "question_gate_2": {
+        "decision": "reject",
+        "score": 0.2763,
+        "path": "deterministic",
+        "signals": {
+          "semantic": 0.2651662849681416,
+          "entity": 0.0,
+          "accepted": 0.21543375286440472,
+          "rejected": 0.23190824606062055
+        }
+      },
+      "final_question": null,
+      "retrieval": null,
+      "post_gate": null,
+      "outcome": "skipped_by_question_gate"
+    }
+  ],
+  "counts": {
+    "questions": 14,
+    "cluster_from_seed": 6,
+    "cluster_assigned_by_embedding": 8,
+    "fail_open": 0,
+    "question_gate_accept_first_try": 9,
+    "question_gate_accept_after_regen": 2,
+    "question_gate_reject": 3,
+    "no_search_result": 0,
+    "post_gate_accept": 7,
+    "post_gate_reject": 4,
+    "written_without_any_gate": 0,
+    "ingested": 7,
+    "facts_extracted": 116,
+    "facts_kept": 65,
+    "facts_duplicate": 3,
+    "facts_dropped_unconnected": 48,
+    "fact_conflicts": 0
+  },
+  "entity_nodes_after": 67,
+  "finished_at": "2026-10-21T14:04:43"
+}

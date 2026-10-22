@@ -41,7 +41,7 @@ load_dotenv()  # reads the .env file sitting next to this script
 GENERIC_ENTITIES = ["Person", "Organization", "Location", "Work", "Event", "Concept", "Date"]
 GENERIC_RELATIONS = ["RELATED_TO", "LOCATED_IN", "PART_OF", "CREATED_BY",
                       "OWNS", "CAUSED_BY", "OCCURRED_ON", "ASSOCIATED_WITH"]
-QUESTION = "What are some of the best psychological thriller movies of the modern era?"
+QUESTION = "Who owns the rights to Alice in Wonderland?"
 # ^ This is literally one of the worked examples in Table 3 of the paper
 #   (their "GraphRAG before/after" table). Using it first means you can
 #   sanity-check your output against what they report.

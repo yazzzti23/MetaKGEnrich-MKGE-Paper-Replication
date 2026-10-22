@@ -1,0 +1,36 @@
+{
+  "question": "Where was High School Musical 2 filmed?",
+  "mode": "best",
+  "chosen_index": 0,
+  "candidates": [
+    {
+      "index": 0,
+      "url": "https://en.wikipedia.org/wiki/High_School_Musical_2",
+      "title": "High School Musical 2 - Wikipedia",
+      "chars": 1278,
+      "tavily_score": 0.9379027,
+      "similarity": 0.7126,
+      "too_short": false
+    },
+    {
+      "index": 1,
+      "url": "https://www.innatentrada.com/about-us",
+      "title": "Filming of High School Musical 2 - St. George",
+      "chars": 156,
+      "tavily_score": 0.8810534,
+      "similarity": 0.8129,
+      "too_short": true
+    },
+    {
+      "index": 2,
+      "url": "https://www.innatentrada.com",
+      "title": "Inn at Entrada | Top St. George Resort with Pool & Golf",
+      "chars": 99,
+      "tavily_score": 0.039405376,
+      "similarity": 0.1101,
+      "too_short": true
+    }
+  ],
+  "min_chars": 300,
+  "min_chars_fallback": false
+}

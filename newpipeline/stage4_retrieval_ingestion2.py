@@ -35,6 +35,11 @@ Changes vs the previous gated Stage 4:
        (max_retries). The 40 s wait between extractions is unchanged.
   [S6] Cluster membership comes from cluster_store.members(), the one
        register, instead of a second hand-maintained clusters_to_nodes.
+  [PG2] Post-Extraction Gate v2 (per entity / per fact, see
+       post_extraction_writer.py): Stage 4 now passes the question to the
+       writer, logs every extracted fact with its status (kept / duplicate
+       / dropped_unconnected, plus relevance and conflicts) in the run log,
+       and adds fact-level totals to the counters.
 
 Run with (from the project root):
     python newpipeline\\stage4_retrieval_ingestion2.py
@@ -203,6 +208,12 @@ async def main():
         "post_gate_reject": 0,
         "written_without_any_gate": 0,
         "ingested": 0,
+        # [PG2] fact-level totals across all gated extractions
+        "facts_extracted": 0,
+        "facts_kept": 0,
+        "facts_duplicate": 0,
+        "facts_dropped_unconnected": 0,
+        "fact_conflicts": 0,
     }
 
     # ---- [run log] Set up the log file.
@@ -380,6 +391,7 @@ async def main():
                 node_label=node_label,
                 cluster_memory=gate_cluster_memory,
                 cluster_member_node_ids=member_node_ids if gate_cluster_memory is not None else None,
+                question=final_question,                                    # [PG2]
             )
 
             await kg_builder.run_async(text=snippet)
@@ -388,16 +400,24 @@ async def main():
             if post_result is not None:
                 record["post_gate"] = {
                     "decision": post_result.decision,
-                    "score": round(post_result.confidence_score, 4),
+                    "reason": post_result.signals.get("reason"),
+                    "share_of_facts_kept": round(post_result.confidence_score, 4),
                     "signals": post_result.signals,
                     "kept_entities": post_result.kept_entity_labels,
+                    "facts": post_result.fact_log,                           # [PG2]
                 }
+                sig = post_result.signals
+                counts["facts_extracted"] += sig.get("facts_total", 0)
+                counts["facts_kept"] += sig.get("facts_kept", 0)
+                counts["facts_duplicate"] += sig.get("facts_duplicate", 0)
+                counts["facts_dropped_unconnected"] += sig.get("facts_dropped_unconnected", 0)
+                counts["fact_conflicts"] += sig.get("fact_conflicts", 0)
 
             if post_result is not None and post_result.decision == "reject":
                 # Post-Extraction Gate rejected -- nothing was written to Neo4j.
                 print(f"    -> REJECTED by Post-Extraction Gate "
-                      f"(combined_score={post_result.confidence_score:.4f}, "
-                      f"signals={post_result.signals}) -- not written to KG.")
+                      f"({post_result.signals.get('reason')}, signals={post_result.signals}) "
+                      f"-- not written to KG.")
                 counts["post_gate_reject"] += 1
                 record["outcome"] = "rejected_by_post_gate"
                 gate_cluster_memory.exemplars.add_rejected(RejectedExemplar(
@@ -405,8 +425,8 @@ async def main():
                     generated_question=final_question,
                     failure_type="post_extraction_gate_reject",
                     rejection_reason=(
-                        f"combined_score={post_result.confidence_score:.4f} did not clear "
-                        f"POST_EXTRACTION_T_ACCEPT; signals={post_result.signals}"
+                        f"post_extraction_gate_v2: {post_result.signals.get('reason')}; "
+                        f"signals={post_result.signals}"
                     ),
                     confidence_score=post_result.confidence_score,
                 ))
@@ -435,8 +455,8 @@ async def main():
                 )
                 if post_result is not None:
                     acceptance_reason += (
-                        f"; post_extraction_gate_accept "
-                        f"(combined_score={post_result.confidence_score:.4f})"
+                        f"; post_extraction_gate_v2_accept "
+                        f"({post_result.signals.get('facts_kept')} new fact(s) kept)"
                     )
                 gate_cluster_memory.exemplars.add_accepted(AcceptedExemplar(
                     sparse_node=node_label,
@@ -471,6 +491,10 @@ async def main():
           f"fail-open={counts['fail_open']} ({100 * counts['fail_open'] / total:.0f}% of questions).")
     print(f"[Stage 4] [F5] Written without any gate: {counts['written_without_any_gate']} "
           f"of {counts['ingested']} ingested.")
+    print(f"[Stage 4] [PG2] Facts extracted (gated pages): {counts['facts_extracted']}  ->  "
+          f"kept {counts['facts_kept']}, duplicates skipped {counts['facts_duplicate']}, "
+          f"dropped as unconnected {counts['facts_dropped_unconnected']}, "
+          f"conflicts logged {counts['fact_conflicts']}.")
     print(f"[Stage 4] Entity nodes BEFORE: {before_total}  ->  AFTER: {after_total}")
     print(f"[Stage 4] Run log saved: {log_path}")
 

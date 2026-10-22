@@ -50,7 +50,7 @@ load_dotenv()  # finds the .env file in this folder or any parent folder
 GENERIC_ENTITIES = ["Person", "Organization", "Location", "Work", "Event", "Concept", "Date"]
 GENERIC_RELATIONS = ["RELATED_TO", "LOCATED_IN", "PART_OF", "CREATED_BY",
                      "OWNS", "CAUSED_BY", "OCCURRED_ON", "ASSOCIATED_WITH"]
-QUESTION = "What are some of the best psychological thriller movies of the modern era?"
+QUESTION = "Who owns the rights to Alice in Wonderland?"
 # ^ One of the worked examples in Table 3 of the paper.
 
 # [R1] How many Tavily results to compare, and how to choose among them.
@@ -58,6 +58,12 @@ QUESTION = "What are some of the best psychological thriller movies of the moder
 #   "top1" = take Tavily's first result, like the original (for the D - R1 run)
 NUM_CANDIDATES = 3
 SELECTION_MODE = "best"
+# [R1 fix, Oct 20] A snippet shorter than this is only picked if EVERY
+# candidate is this short. Found on q1: similarity alone chose a 156-char
+# hotel blurb over a 1,278-char Wikipedia snippet, and the seed came out
+# with zero entities. Short text can be very "similar" to the question
+# while holding almost no facts.
+MIN_SNIPPET_CHARS = 300
 RETRIEVAL_LOG_FILE = "seed_retrieval_log.json"
 
 # [F4] Same chunking as Stage 4.
@@ -95,6 +101,9 @@ def select_best_snippet(question: str, results: list, embedder, mode: str = "bes
     mode="best": embed the question once, embed each result's text, keep
                  the result with the highest cosine similarity. Ties go to
                  the earlier result (i.e. Tavily's own ranking).
+                 [R1 fix] Results shorter than MIN_SNIPPET_CHARS are skipped
+                 unless every result is that short (then all are considered
+                 and log["min_chars_fallback"] is True).
     mode="top1": return the first result with non-empty text, exactly like
                  the original pipeline (used for the "ours minus R1" run).
 
@@ -117,14 +126,22 @@ def select_best_snippet(question: str, results: list, embedder, mode: str = "bes
     question_vec = embedder.embed_query(question)
     best_index, best_sim = None, -1.0
 
+    # [R1 fix] Only results with enough text compete, unless none have enough.
+    texts = [(r.get("content") or "") for r in results]
+    long_enough = {i for i, t in enumerate(texts) if len(t) >= MIN_SNIPPET_CHARS}
+    eligible = long_enough or {i for i, t in enumerate(texts) if t}
+    log["min_chars"] = MIN_SNIPPET_CHARS
+    log["min_chars_fallback"] = not long_enough and bool(eligible)
+
     for i, result in enumerate(results):
-        text = result.get("content") or ""
+        text = texts[i]
         candidate = {"index": i, "url": result.get("url"), "title": result.get("title"),
-                     "chars": len(text), "tavily_score": result.get("score"), "similarity": None}
+                     "chars": len(text), "tavily_score": result.get("score"), "similarity": None,
+                     "too_short": len(text) < MIN_SNIPPET_CHARS}
         if text:
             sim = _cosine_similarity(question_vec, embedder.embed_query(text))
             candidate["similarity"] = round(sim, 4)
-            if sim > best_sim:  # strict ">" so ties keep Tavily's earlier rank
+            if i in eligible and sim > best_sim:  # strict ">" so ties keep Tavily's earlier rank
                 best_index, best_sim = i, sim
         log["candidates"].append(candidate)
 
@@ -144,6 +161,7 @@ def get_seed_snippet(question: str, embedder) -> str:
     print(f"[Stage 1a] Tavily returned {len(results)} result(s); selection mode = {SELECTION_MODE!r}")
     for c in log["candidates"]:
         marker = "  <-- chosen" if c["index"] == log["chosen_index"] else ""
+        marker += "  (too short, skipped)" if c.get("too_short") and c["index"] != log["chosen_index"] else ""
         print(f"    #{c['index']}  sim={c.get('similarity')}  chars={c['chars']}  "
               f"{c.get('title')}  {c.get('url')}{marker}")
 

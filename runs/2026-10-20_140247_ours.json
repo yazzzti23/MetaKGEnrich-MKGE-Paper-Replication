@@ -1,0 +1,1232 @@
+{
+  "run_tag": "ours",
+  "started_at": "2026-10-20T14:02:47",
+  "settings": {
+    "selection_mode": "best",
+    "num_candidates": 3,
+    "metrics": [
+      "clique",
+      "non_clique",
+      "clustering",
+      "degree",
+      "betweenness",
+      "diameter",
+      "louvain"
+    ]
+  },
+  "entity_nodes_before": 12,
+  "clusters": {
+    "0": [
+      "3.3 million viewers",
+      "Latin America",
+      "north region",
+      "premiere of High School Musical 2"
+    ],
+    "1": [
+      "Argentina",
+      "Brazil",
+      "High School Musical",
+      "Mexico",
+      "North region",
+      "Premiere"
+    ],
+    "2": [
+      "Disney Channel",
+      "High School Musical 2"
+    ]
+  },
+  "questions": [
+    {
+      "metric": "clique",
+      "target_node": "premiere of High School Musical 2",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:187",
+      "question": "On what date did the premiere of High School Musical 2 occur?",
+      "cluster_resolution": "seed",
+      "cluster_id": 0,
+      "question_gate_1": {
+        "decision": "accept",
+        "score": 0.6156,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.5644816620118102,
+          "entity": 0.6666666666666666,
+          "accepted": null,
+          "rejected": null
+        }
+      },
+      "regenerated_question": null,
+      "question_gate_2": null,
+      "final_question": "On what date did the premiere of High School Musical 2 occur?",
+      "retrieval": {
+        "question": "On what date did the premiere of High School Musical 2 occur?",
+        "mode": "best",
+        "chosen_index": 0,
+        "candidates": [
+          {
+            "index": 0,
+            "url": "https://en.wikipedia.org/wiki/High_School_Musical_2",
+            "title": "High School Musical 2 - Wikipedia",
+            "chars": 1451,
+            "tavily_score": 0.9372167,
+            "similarity": 0.6846,
+            "too_short": false
+          },
+          {
+            "index": 1,
+            "url": "https://playbill.com/article/disneyland-hosts-world-premiere-of-high-school-musical-2-aug-14-com-142951",
+            "title": "Disneyland Hosts World Premiere of \"High School Musical 2\" Aug. 14 | Playbill",
+            "chars": 973,
+            "tavily_score": 0.77179235,
+            "similarity": 0.5958,
+            "too_short": false
+          },
+          {
+            "index": 2,
+            "url": "https://www.rottentomatoes.com/m/high_school_musical_2",
+            "title": "High School Musical 2 | Rotten Tomatoes",
+            "chars": 1299,
+            "tavily_score": 0.6708892,
+            "similarity": 0.51,
+            "too_short": false
+          }
+        ],
+        "min_chars": 300,
+        "min_chars_fallback": false
+      },
+      "post_gate": {
+        "decision": "accept",
+        "reason": "new_connected_facts",
+        "share_of_facts_kept": 0.9231,
+        "signals": {
+          "reason": "new_connected_facts",
+          "anchors_found": 3,
+          "entities_total": 14,
+          "entities_kept": 14,
+          "new_entities_kept": 11,
+          "facts_total": 13,
+          "facts_kept": 12,
+          "facts_duplicate": 1,
+          "facts_dropped_unconnected": 0,
+          "fact_conflicts": 0
+        },
+        "kept_entities": [
+          "High School Musical 2",
+          "Premiere of High School Musical 2",
+          "August 19, 2007",
+          "DirecTV",
+          "May 23, 2007",
+          "Exclusive high-definition airing",
+          "August 17, 2007",
+          "Eastern Time Zone (North America)",
+          "Kenny Ortega",
+          "Disney Channel",
+          "High School Musical 2: Wildcat Chat",
+          "August 18, 2007",
+          "Disney",
+          "Sing-along version airing"
+        ],
+        "facts": [
+          {
+            "subject": "Premiere of High School Musical 2",
+            "relation": "OCCURRED_ON",
+            "object": "August 17, 2007",
+            "relevance": 0.8914,
+            "status": "kept"
+          },
+          {
+            "subject": "Premiere of High School Musical 2",
+            "relation": "LOCATED_IN",
+            "object": "Eastern Time Zone (North America)",
+            "relevance": 0.7931,
+            "status": "kept"
+          },
+          {
+            "subject": "Premiere of High School Musical 2",
+            "relation": "RELATED_TO",
+            "object": "High School Musical 2",
+            "relevance": 0.8792,
+            "status": "duplicate"
+          },
+          {
+            "subject": "Premiere of High School Musical 2",
+            "relation": "RELATED_TO",
+            "object": "Kenny Ortega",
+            "relevance": 0.659,
+            "status": "kept"
+          },
+          {
+            "subject": "Disney Channel",
+            "relation": "ASSOCIATED_WITH",
+            "object": "High School Musical 2: Wildcat Chat",
+            "relevance": 0.576,
+            "status": "kept"
+          },
+          {
+            "subject": "High School Musical 2: Wildcat Chat",
+            "relation": "OCCURRED_ON",
+            "object": "August 18, 2007",
+            "relevance": 0.7237,
+            "status": "kept"
+          },
+          {
+            "subject": "High School Musical 2: Wildcat Chat",
+            "relation": "RELATED_TO",
+            "object": "High School Musical 2",
+            "relevance": 0.6321,
+            "status": "kept"
+          },
+          {
+            "subject": "Disney",
+            "relation": "ASSOCIATED_WITH",
+            "object": "Sing-along version airing",
+            "relevance": 0.3014,
+            "status": "kept"
+          },
+          {
+            "subject": "Sing-along version airing",
+            "relation": "OCCURRED_ON",
+            "object": "August 19, 2007",
+            "relevance": 0.335,
+            "status": "kept"
+          },
+          {
+            "subject": "Sing-along version airing",
+            "relation": "RELATED_TO",
+            "object": "High School Musical 2",
+            "relevance": 0.6146,
+            "status": "kept"
+          },
+          {
+            "subject": "DirecTV",
+            "relation": "ASSOCIATED_WITH",
+            "object": "Exclusive high-definition airing",
+            "relevance": 0.1551,
+            "status": "kept"
+          },
+          {
+            "subject": "Exclusive high-definition airing",
+            "relation": "OCCURRED_ON",
+            "object": "May 23, 2007",
+            "relevance": 0.3575,
+            "status": "kept"
+          },
+          {
+            "subject": "Exclusive high-definition airing",
+            "relation": "RELATED_TO",
+            "object": "High School Musical 2",
+            "relevance": 0.7301,
+            "status": "kept"
+          }
+        ]
+      },
+      "outcome": "ingested"
+    },
+    {
+      "metric": "clique",
+      "target_node": "north region",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:183",
+      "question": "Which countries are included in the north region mentioned for the High School Musical 2 premiere?",
+      "cluster_resolution": "seed",
+      "cluster_id": 0,
+      "question_gate_1": {
+        "decision": "accept",
+        "score": 0.5448,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.5248756333403382,
+          "entity": 0.5,
+          "accepted": 0.6417274308532567,
+          "rejected": null
+        }
+      },
+      "regenerated_question": null,
+      "question_gate_2": null,
+      "final_question": "Which countries are included in the north region mentioned for the High School Musical 2 premiere?",
+      "retrieval": {
+        "question": "Which countries are included in the north region mentioned for the High School Musical 2 premiere?",
+        "mode": "best",
+        "chosen_index": 0,
+        "candidates": [
+          {
+            "index": 0,
+            "url": "https://en.wikipedia.org/wiki/High_School_Musical_2",
+            "title": "High School Musical 2 - Wikipedia",
+            "chars": 1505,
+            "tavily_score": 0.8622012,
+            "similarity": 0.646,
+            "too_short": false
+          },
+          {
+            "index": 1,
+            "url": "https://thedisneypurist.com/2026/01/23/high-school-musical-2-2007",
+            "title": "High School Musical 2 (2007) | The Disney Purist",
+            "chars": 1495,
+            "tavily_score": 0.52627033,
+            "similarity": 0.6318,
+            "too_short": false
+          },
+          {
+            "index": 2,
+            "url": "https://www.innatentrada.com/blog/high-school-musical-2-at-the-inn-at-entrada",
+            "title": "High School Musical 2 at The Inn at Entrada Blog | The Inn at Entrada",
+            "chars": 995,
+            "tavily_score": 0.10703566,
+            "similarity": 0.5402,
+            "too_short": false
+          }
+        ],
+        "min_chars": 300,
+        "min_chars_fallback": false
+      },
+      "post_gate": {
+        "decision": "accept",
+        "reason": "new_connected_facts",
+        "share_of_facts_kept": 0.5,
+        "signals": {
+          "reason": "new_connected_facts",
+          "anchors_found": 6,
+          "entities_total": 71,
+          "entities_kept": 11,
+          "new_entities_kept": 5,
+          "facts_total": 14,
+          "facts_kept": 7,
+          "facts_duplicate": 3,
+          "facts_dropped_unconnected": 4,
+          "fact_conflicts": 0
+        },
+        "kept_entities": [
+          "Latin America",
+          "High School Musical 2",
+          "Premiere in Argentina",
+          "Debut of High School Musical",
+          "north region",
+          "Disney Channel",
+          "Argentina",
+          "High School Musical",
+          "Brazil",
+          "Mexico",
+          "Premiere of High School Musical 2"
+        ],
+        "facts": [
+          {
+            "subject": "Premiere of High School Musical 2",
+            "relation": "RELATED_TO",
+            "object": "High School Musical 2",
+            "relevance": 0.6499,
+            "status": "duplicate"
+          },
+          {
+            "subject": "Premiere of High School Musical 2",
+            "relation": "LOCATED_IN",
+            "object": "Latin America",
+            "relevance": 0.7128,
+            "status": "kept"
+          },
+          {
+            "subject": "Premiere of High School Musical 2",
+            "relation": "LOCATED_IN",
+            "object": "north region",
+            "relevance": 0.8061,
+            "status": "duplicate"
+          },
+          {
+            "subject": "High School Musical 2",
+            "relation": "CREATED_BY",
+            "object": "Disney Channel",
+            "relevance": 0.5879,
+            "status": "duplicate"
+          },
+          {
+            "subject": "Premiere in Argentina",
+            "relation": "RELATED_TO",
+            "object": "High School Musical 2",
+            "relevance": 0.6714,
+            "status": "kept"
+          },
+          {
+            "subject": "Premiere in Argentina",
+            "relation": "RELATED_TO",
+            "object": "High School Musical",
+            "relevance": 0.6106,
+            "status": "kept"
+          },
+          {
+            "subject": "Premiere in Argentina",
+            "relation": "LOCATED_IN",
+            "object": "Argentina",
+            "relevance": 0.3904,
+            "status": "kept"
+          },
+          {
+            "subject": "Debut of High School Musical",
+            "relation": "RELATED_TO",
+            "object": "High School Musical",
+            "relevance": 0.5711,
+            "status": "kept"
+          },
+          {
+            "subject": "Brazil",
+            "relation": "ASSOCIATED_WITH",
+            "object": "High School Musical 2",
+            "relevance": 0.6668,
+            "status": "kept"
+          },
+          {
+            "subject": "Mexico",
+            "relation": "ASSOCIATED_WITH",
+            "object": "High School Musical 2",
+            "relevance": 0.6749,
+            "status": "kept"
+          },
+          {
+            "subject": "Sing-along version airing",
+            "relation": "CREATED_BY",
+            "object": "Disney",
+            "relevance": 0.311,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "Sing-along version airing",
+            "relation": "OCCURRED_ON",
+            "object": "August 19",
+            "relevance": 0.2624,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "Exclusive high-definition airing",
+            "relation": "CREATED_BY",
+            "object": "DirecTV",
+            "relevance": 0.1724,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "Exclusive high-definition airing",
+            "relation": "OCCURRED_ON",
+            "object": "May 23",
+            "relevance": 0.2367,
+            "status": "dropped_unconnected"
+          }
+        ]
+      },
+      "outcome": "ingested"
+    },
+    {
+      "metric": "non_clique",
+      "target_node": "Debut of High School Musical",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:22",
+      "question": "What was the original air date and viewership of the debut of High School Musical in Latin America?",
+      "cluster_resolution": "assigned_by_embedding",
+      "cluster_id": 1,
+      "question_gate_1": {
+        "decision": "accept",
+        "score": 0.8231,
+        "path": "deterministic",
+        "signals": {
+          "semantic": 0.6461349550419165,
+          "entity": 1.0,
+          "accepted": null,
+          "rejected": null
+        }
+      },
+      "regenerated_question": null,
+      "question_gate_2": null,
+      "final_question": "What was the original air date and viewership of the debut of High School Musical in Latin America?",
+      "retrieval": {
+        "question": "What was the original air date and viewership of the debut of High School Musical in Latin America?",
+        "mode": "best",
+        "chosen_index": 0,
+        "candidates": [
+          {
+            "index": 0,
+            "url": "https://en.wikipedia.org/wiki/High_School_Musical",
+            "title": "High School Musical - Wikipedia",
+            "chars": 1193,
+            "tavily_score": 0.6565047,
+            "similarity": 0.6082,
+            "too_short": false
+          },
+          {
+            "index": 1,
+            "url": "https://now.temple.edu/news/2026-01-28/high-school-musical-turns-20-year-what-its-legacy-childrens-media",
+            "title": "‘High School Musical’ turns 20 this year. What is its legacy for children’s media? | Temple Now",
+            "chars": 1318,
+            "tavily_score": 0.38984904,
+            "similarity": 0.5375,
+            "too_short": false
+          },
+          {
+            "index": 2,
+            "url": "https://thewaltdisneycompany.com/news/high-school-musical-20th-anniversary",
+            "title": "'High School Musical' Turns 20: How the Disney Channel Phenomenon Became the Blueprint for Music-Driven, Global Franchises | The Walt Disney Company",
+            "chars": 1428,
+            "tavily_score": 0.36324075,
+            "similarity": 0.6053,
+            "too_short": false
+          }
+        ],
+        "min_chars": 300,
+        "min_chars_fallback": false
+      },
+      "post_gate": {
+        "decision": "accept",
+        "reason": "new_connected_facts",
+        "share_of_facts_kept": 1.0,
+        "signals": {
+          "reason": "new_connected_facts",
+          "anchors_found": 1,
+          "entities_total": 5,
+          "entities_kept": 5,
+          "new_entities_kept": 4,
+          "facts_total": 4,
+          "facts_kept": 4,
+          "facts_duplicate": 0,
+          "facts_dropped_unconnected": 0,
+          "fact_conflicts": 0
+        },
+        "kept_entities": [
+          "High School Musical",
+          "Disney Channel",
+          "January 20, 2006",
+          "U.S.",
+          "2019"
+        ],
+        "facts": [
+          {
+            "subject": "High School Musical",
+            "relation": "RELATED_TO",
+            "object": "Disney Channel",
+            "relevance": 0.6149,
+            "status": "kept"
+          },
+          {
+            "subject": "High School Musical",
+            "relation": "OCCURRED_ON",
+            "object": "January 20, 2006",
+            "relevance": 0.7269,
+            "status": "kept"
+          },
+          {
+            "subject": "High School Musical",
+            "relation": "ASSOCIATED_WITH",
+            "object": "U.S.",
+            "relevance": 0.6846,
+            "status": "kept"
+          },
+          {
+            "subject": "High School Musical",
+            "relation": "ASSOCIATED_WITH",
+            "object": "2019",
+            "relevance": 0.6485,
+            "status": "kept"
+          }
+        ]
+      },
+      "outcome": "ingested"
+    },
+    {
+      "metric": "non_clique",
+      "target_node": "Brazil",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:18",
+      "question": "What viewership percentage did High School Musical 2 achieve in Brazil compared to its debut?",
+      "cluster_resolution": "assigned_by_embedding",
+      "cluster_id": 1,
+      "question_gate_1": {
+        "decision": "reject",
+        "score": 0.6629,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.8031527494650194,
+          "entity": 0.5,
+          "accepted": 0.696694562241154,
+          "rejected": null
+        }
+      },
+      "regenerated_question": "On which television network was High School Musical 2 aired in Brazil?",
+      "question_gate_2": {
+        "decision": "accept",
+        "score": 0.652,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.7680436664926467,
+          "entity": 0.5,
+          "accepted": 0.7058637248852452,
+          "rejected": null
+        }
+      },
+      "final_question": "On which television network was High School Musical 2 aired in Brazil?",
+      "retrieval": {
+        "question": "On which television network was High School Musical 2 aired in Brazil?",
+        "mode": "best",
+        "chosen_index": 2,
+        "candidates": [
+          {
+            "index": 0,
+            "url": "https://en.wikipedia.org/wiki/High_School_Musical_2",
+            "title": "High School Musical 2 - Wikipedia",
+            "chars": 1507,
+            "tavily_score": 0.7253574,
+            "similarity": 0.7153,
+            "too_short": false
+          },
+          {
+            "index": 1,
+            "url": "https://en.wikipedia.org/wiki/High_School_Musical",
+            "title": "High School Musical - Wikipedia",
+            "chars": 1217,
+            "tavily_score": 0.7050753,
+            "similarity": 0.7005,
+            "too_short": false
+          },
+          {
+            "index": 2,
+            "url": "https://playbill.com/article/there-is-life-after-high-school-high-school-musical-2-debuts-on-tv-aug-17-com-143045",
+            "title": "There Is Life After High School: \"High School Musical 2\" Debuts on TV Aug. 17 | Playbill",
+            "chars": 1068,
+            "tavily_score": 0.38567597,
+            "similarity": 0.7235,
+            "too_short": false
+          }
+        ],
+        "min_chars": 300,
+        "min_chars_fallback": false
+      },
+      "post_gate": {
+        "decision": "accept",
+        "reason": "new_connected_facts",
+        "share_of_facts_kept": 0.5625,
+        "signals": {
+          "reason": "new_connected_facts",
+          "anchors_found": 2,
+          "entities_total": 15,
+          "entities_kept": 8,
+          "new_entities_kept": 6,
+          "facts_total": 16,
+          "facts_kept": 9,
+          "facts_duplicate": 0,
+          "facts_dropped_unconnected": 7,
+          "fact_conflicts": 0
+        },
+        "kept_entities": [
+          "Ernio Hernandez",
+          "Ashley Tisdale",
+          "Disney Channel",
+          "High School Musical 2",
+          "August 17, 2007",
+          "August 18, 2007",
+          "Wildcat Chat",
+          "Telecast of High School Musical 2"
+        ],
+        "facts": [
+          {
+            "subject": "High School Musical 2",
+            "relation": "LOCATED_IN",
+            "object": "Disney Channel",
+            "relevance": 0.7645,
+            "status": "kept"
+          },
+          {
+            "subject": "High School Musical 2",
+            "relation": "OCCURRED_ON",
+            "object": "August 17, 2007",
+            "relevance": 0.6775,
+            "status": "kept"
+          },
+          {
+            "subject": "High School Musical 2",
+            "relation": "OCCURRED_ON",
+            "object": "August 18, 2007",
+            "relevance": 0.679,
+            "status": "kept"
+          },
+          {
+            "subject": "Wildcat Chat",
+            "relation": "PART_OF",
+            "object": "Telecast of High School Musical 2",
+            "relevance": 0.6419,
+            "status": "kept"
+          },
+          {
+            "subject": "Telecast of High School Musical 2",
+            "relation": "LOCATED_IN",
+            "object": "Disney Channel",
+            "relevance": 0.7827,
+            "status": "kept"
+          },
+          {
+            "subject": "Telecast of High School Musical 2",
+            "relation": "OCCURRED_ON",
+            "object": "August 18, 2007",
+            "relevance": 0.72,
+            "status": "kept"
+          },
+          {
+            "subject": "Ashley Tisdale",
+            "relation": "RELATED_TO",
+            "object": "High School Musical 2",
+            "relevance": 0.489,
+            "status": "kept"
+          },
+          {
+            "subject": "Ernio Hernandez",
+            "relation": "RELATED_TO",
+            "object": "High School Musical 2",
+            "relevance": 0.5108,
+            "status": "kept"
+          },
+          {
+            "subject": "Wildcat Chat",
+            "relation": "ASSOCIATED_WITH",
+            "object": "High School Musical 2",
+            "relevance": 0.587,
+            "status": "kept"
+          },
+          {
+            "subject": "rerun",
+            "relation": "OCCURRED_ON",
+            "object": "Aug. 18",
+            "relevance": 0.1861,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "rerun",
+            "relation": "LOCATED_IN",
+            "object": "ET",
+            "relevance": 0.1698,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "Sing-Along telecast",
+            "relation": "OCCURRED_ON",
+            "object": "Aug. 19",
+            "relevance": 0.2955,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "Sing-Along telecast",
+            "relation": "LOCATED_IN",
+            "object": "ET",
+            "relevance": 0.2618,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "Sing-Along telecast",
+            "relation": "ASSOCIATED_WITH",
+            "object": "song lyrics",
+            "relevance": 0.2643,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "rerun",
+            "relation": "RELATED_TO",
+            "object": "Sing-Along telecast",
+            "relevance": 0.3496,
+            "status": "dropped_unconnected"
+          },
+          {
+            "subject": "rerun",
+            "relation": "PART_OF",
+            "object": "movie",
+            "relevance": 0.1612,
+            "status": "dropped_unconnected"
+          }
+        ]
+      },
+      "outcome": "ingested"
+    },
+    {
+      "metric": "clustering",
+      "target_node": "Latin America",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:12",
+      "question": "Which specific countries are encompassed by the \"Latin America\" region mentioned here?",
+      "cluster_resolution": "assigned_by_embedding",
+      "cluster_id": 1,
+      "question_gate_1": {
+        "decision": "reject",
+        "score": 0.4206,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.19351196778329138,
+          "entity": 0.75,
+          "accepted": 0.26729800689115446,
+          "rejected": null
+        }
+      },
+      "regenerated_question": "What other film premieres in Latin America have drawn viewership numbers close to the 3.3 million reported for High School Musical 2?",
+      "question_gate_2": {
+        "decision": "reject",
+        "score": 0.6487,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.7423098340592352,
+          "entity": 0.5,
+          "accepted": 0.7315076346719708,
+          "rejected": null
+        }
+      },
+      "final_question": null,
+      "retrieval": null,
+      "post_gate": null,
+      "outcome": "skipped_by_question_gate"
+    },
+    {
+      "metric": "clustering",
+      "target_node": "DirecTV",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:7",
+      "question": "On what exact date did DirecTV host the exclusive high-definition airing of High School Musical 2?",
+      "cluster_resolution": "assigned_by_embedding",
+      "cluster_id": 1,
+      "question_gate_1": {
+        "decision": "accept",
+        "score": 0.7374,
+        "path": "deterministic",
+        "signals": {
+          "semantic": 0.6558528821923586,
+          "entity": 1.0,
+          "accepted": 0.6901796541734013,
+          "rejected": 0.4868494540922062
+        }
+      },
+      "regenerated_question": null,
+      "question_gate_2": null,
+      "final_question": "On what exact date did DirecTV host the exclusive high-definition airing of High School Musical 2?",
+      "retrieval": {
+        "question": "On what exact date did DirecTV host the exclusive high-definition airing of High School Musical 2?",
+        "mode": "best",
+        "chosen_index": 1,
+        "candidates": [
+          {
+            "index": 0,
+            "url": "https://en.wikipedia.org/wiki/High_School_Musical_2",
+            "title": "High School Musical 2 - Wikipedia",
+            "chars": 1107,
+            "tavily_score": 0.93468803,
+            "similarity": 0.755,
+            "too_short": false
+          },
+          {
+            "index": 1,
+            "url": "https://www.tvweek.com/in-depth/2007/08/directv-to-air-high-school-mus",
+            "title": "DirecTV to Air ‘High School Musical 2’ in HD | TVWeek",
+            "chars": 809,
+            "tavily_score": 0.8173562,
+            "similarity": 0.8548,
+            "too_short": false
+          },
+          {
+            "index": 2,
+            "url": "https://playbill.com/article/disney-channels-high-school-musical-2-will-debut-dance-along-version-sept-8-com-143549",
+            "title": "Disney Channel's \"High School Musical 2\" Will Debut Dance-Along Version Sept. 8 | Playbill",
+            "chars": 1222,
+            "tavily_score": 0.23598804,
+            "similarity": 0.6158,
+            "too_short": false
+          }
+        ],
+        "min_chars": 300,
+        "min_chars_fallback": false
+      },
+      "post_gate": {
+        "decision": "accept",
+        "reason": "new_connected_facts",
+        "share_of_facts_kept": 0.8,
+        "signals": {
+          "reason": "new_connected_facts",
+          "anchors_found": 5,
+          "entities_total": 10,
+          "entities_kept": 9,
+          "new_entities_kept": 4,
+          "facts_total": 10,
+          "facts_kept": 8,
+          "facts_duplicate": 2,
+          "facts_dropped_unconnected": 0,
+          "fact_conflicts": 0
+        },
+        "kept_entities": [
+          "DirecTV",
+          "Disney Channel",
+          "Disney Channel HD",
+          "High School Musical 2",
+          "High School Musical",
+          "Premiere of High School Musical 2",
+          "Premiere of High School Musical",
+          "August 17, 2007",
+          "January 2006"
+        ],
+        "facts": [
+          {
+            "subject": "DirecTV",
+            "relation": "RELATED_TO",
+            "object": "High School Musical 2",
+            "relevance": 0.8299,
+            "status": "kept"
+          },
+          {
+            "subject": "DirecTV",
+            "relation": "RELATED_TO",
+            "object": "Disney Channel HD",
+            "relevance": 0.5747,
+            "status": "kept"
+          },
+          {
+            "subject": "Disney Channel HD",
+            "relation": "PART_OF",
+            "object": "Disney Channel",
+            "relevance": 0.3831,
+            "status": "kept"
+          },
+          {
+            "subject": "Premiere of High School Musical 2",
+            "relation": "OCCURRED_ON",
+            "object": "August 17, 2007",
+            "relevance": 0.7283,
+            "status": "duplicate"
+          },
+          {
+            "subject": "Premiere of High School Musical 2",
+            "relation": "LOCATED_IN",
+            "object": "Disney Channel",
+            "relevance": 0.7153,
+            "status": "kept"
+          },
+          {
+            "subject": "Premiere of High School Musical 2",
+            "relation": "RELATED_TO",
+            "object": "High School Musical 2",
+            "relevance": 0.6908,
+            "status": "duplicate"
+          },
+          {
+            "subject": "Premiere of High School Musical",
+            "relation": "OCCURRED_ON",
+            "object": "January 2006",
+            "relevance": 0.6699,
+            "status": "kept"
+          },
+          {
+            "subject": "Premiere of High School Musical",
+            "relation": "LOCATED_IN",
+            "object": "Disney Channel",
+            "relevance": 0.6392,
+            "status": "kept"
+          },
+          {
+            "subject": "Premiere of High School Musical",
+            "relation": "RELATED_TO",
+            "object": "High School Musical",
+            "relevance": 0.6205,
+            "status": "kept"
+          },
+          {
+            "subject": "High School Musical 2",
+            "relation": "RELATED_TO",
+            "object": "High School Musical",
+            "relevance": 0.6101,
+            "status": "kept"
+          }
+        ]
+      },
+      "outcome": "ingested"
+    },
+    {
+      "metric": "degree",
+      "target_node": "Disney",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:4",
+      "question": "Which Disney Channel program featured Kenny Ortega and the cast in a telecast on August 18, and what was its title?",
+      "cluster_resolution": "assigned_by_embedding",
+      "cluster_id": 1,
+      "question_gate_1": {
+        "decision": "reject",
+        "score": 0.463,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.2745668747624069,
+          "entity": 0.5,
+          "accepted": 0.378693597735097,
+          "rejected": 0.22536079650251659
+        }
+      },
+      "regenerated_question": "How long was Disney's \"High School Musical 2: Wildcat Chat\" telecast that aired on August 18?",
+      "question_gate_2": {
+        "decision": "reject",
+        "score": 0.5902,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.6255874649990479,
+          "entity": 0.5,
+          "accepted": 0.7060774650940361,
+          "rejected": 0.44370456576829076
+        }
+      },
+      "final_question": null,
+      "retrieval": null,
+      "post_gate": null,
+      "outcome": "skipped_by_question_gate"
+    },
+    {
+      "metric": "degree",
+      "target_node": "Eastern Time Zone (North America)",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:125",
+      "question": "What is the UTC offset for the Eastern Time Zone (North America) during standard time?",
+      "cluster_resolution": "assigned_by_embedding",
+      "cluster_id": 1,
+      "question_gate_1": {
+        "decision": "reject",
+        "score": 0.3678,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.06691227999752229,
+          "entity": 0.5,
+          "accepted": 0.18292867590533743,
+          "rejected": 0.19448801975759006
+        }
+      },
+      "regenerated_question": "Which major U.S. cities are located in the Eastern Time Zone (North America)?",
+      "question_gate_2": {
+        "decision": "reject",
+        "score": 0.3637,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.051988051222587844,
+          "entity": 0.5,
+          "accepted": 0.10139608182720618,
+          "rejected": 0.11103828108530124
+        }
+      },
+      "final_question": null,
+      "retrieval": null,
+      "post_gate": null,
+      "outcome": "skipped_by_question_gate"
+    },
+    {
+      "metric": "betweenness",
+      "target_node": "2019",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:29",
+      "question": "What total number of unique viewers had watched all High School Musical films worldwide by 2019?",
+      "cluster_resolution": "assigned_by_embedding",
+      "cluster_id": 1,
+      "question_gate_1": {
+        "decision": "reject",
+        "score": 0.6846,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.6678308569202462,
+          "entity": 1.0,
+          "accepted": 0.6411888754744103,
+          "rejected": 0.7198225800837942
+        }
+      },
+      "regenerated_question": "Which streaming platform accounted for the largest portion of the over 225 million unique viewers of High School Musical reported in 2019?",
+      "question_gate_2": {
+        "decision": "reject",
+        "score": 0.6923,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.654806818391464,
+          "entity": 1.0,
+          "accepted": 0.5702824144021255,
+          "rejected": 0.591075725357816
+        }
+      },
+      "final_question": null,
+      "retrieval": null,
+      "post_gate": null,
+      "outcome": "skipped_by_question_gate"
+    },
+    {
+      "metric": "betweenness",
+      "target_node": "Kenny Ortega",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:0",
+      "question": "Which other Disney Channel projects did Kenny Ortega direct or choreograph besides High School Musical?",
+      "cluster_resolution": "assigned_by_embedding",
+      "cluster_id": 1,
+      "question_gate_1": {
+        "decision": "reject",
+        "score": 0.4716,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.40823380453980757,
+          "entity": 0.5,
+          "accepted": 0.42103785369251057,
+          "rejected": 0.4251713911495105
+        }
+      },
+      "regenerated_question": "What was the title of the Disney Channel telecast hosted by Kenny Ortega and the High School Musical cast on August 17, 2007?",
+      "question_gate_2": {
+        "decision": "reject",
+        "score": 0.5047,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.5213473964234602,
+          "entity": 0.5,
+          "accepted": 0.5520908564108494,
+          "rejected": 0.5606720294067267
+        }
+      },
+      "final_question": null,
+      "retrieval": null,
+      "post_gate": null,
+      "outcome": "skipped_by_question_gate"
+    },
+    {
+      "metric": "diameter",
+      "target_node": "January 2006",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:50",
+      "question": "What was the exact premiere date of the original High School Musical in January 2006?",
+      "cluster_resolution": "assigned_by_embedding",
+      "cluster_id": 1,
+      "question_gate_1": {
+        "decision": "reject",
+        "score": 0.6972,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.5955328092582816,
+          "entity": 1.0,
+          "accepted": 0.7541309768447324,
+          "rejected": 0.6616072019764357
+        }
+      },
+      "regenerated_question": "What other significant television premieres or cultural events occurred in January 2006?",
+      "question_gate_2": {
+        "decision": "reject",
+        "score": 0.406,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.21318172997247667,
+          "entity": 0.5,
+          "accepted": 0.3822447164511524,
+          "rejected": 0.4219057387417134
+        }
+      },
+      "final_question": null,
+      "retrieval": null,
+      "post_gate": null,
+      "outcome": "skipped_by_question_gate"
+    },
+    {
+      "metric": "diameter",
+      "target_node": "Disney Channel HD",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:44",
+      "question": "When was Disney Channel HD officially launched?",
+      "cluster_resolution": "assigned_by_embedding",
+      "cluster_id": 1,
+      "question_gate_1": {
+        "decision": "reject",
+        "score": 0.5634,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.474856801514374,
+          "entity": 0.75,
+          "accepted": 0.5785094066292695,
+          "rejected": 0.5989304537878518
+        }
+      },
+      "regenerated_question": "Which major TV providers broadcast Disney Channel HD globally?",
+      "question_gate_2": {
+        "decision": "reject",
+        "score": 0.5317,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.4074435331767465,
+          "entity": 0.75,
+          "accepted": 0.3778037776145799,
+          "rejected": 0.45571535462486196
+        }
+      },
+      "final_question": null,
+      "retrieval": null,
+      "post_gate": null,
+      "outcome": "skipped_by_question_gate"
+    },
+    {
+      "metric": "louvain",
+      "target_node": "High School Musical",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:17",
+      "question": "What total worldwide viewership did the original High School Musical achieve upon its initial broadcast?",
+      "cluster_resolution": "assigned_by_embedding",
+      "cluster_id": 1,
+      "question_gate_1": {
+        "decision": "reject",
+        "score": 0.5937,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.7070380358670416,
+          "entity": 0.6111111111111112,
+          "accepted": 0.7326577960857923,
+          "rejected": 0.741360922528181
+        }
+      },
+      "regenerated_question": "How many viewers tuned in for the High School Musical 2 premiere in the Central region of Latin America?",
+      "question_gate_2": {
+        "decision": "reject",
+        "score": 0.6323,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.7524917758545432,
+          "entity": 0.7222222222222222,
+          "accepted": 0.7820477979154085,
+          "rejected": 0.8325284996797943
+        }
+      },
+      "final_question": null,
+      "retrieval": null,
+      "post_gate": null,
+      "outcome": "skipped_by_question_gate"
+    },
+    {
+      "metric": "louvain",
+      "target_node": "Premiere of High School Musical",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:48",
+      "question": "What was the exact date and time of the original High School Musical premiere on Disney Channel?",
+      "cluster_resolution": "assigned_by_embedding",
+      "cluster_id": 1,
+      "question_gate_1": {
+        "decision": "reject",
+        "score": 0.6252,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.6383637978572358,
+          "entity": 0.8333333333333333,
+          "accepted": 0.7206597754016418,
+          "rejected": 0.8022821075665487
+        }
+      },
+      "regenerated_question": "How many viewers watched the Premiere of High School Musical during its original Disney Channel broadcast?",
+      "question_gate_2": {
+        "decision": "reject",
+        "score": 0.669,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.7540745483241772,
+          "entity": 0.8333333333333333,
+          "accepted": 0.6649570610270804,
+          "rejected": 0.7011968366186957
+        }
+      },
+      "final_question": null,
+      "retrieval": null,
+      "post_gate": null,
+      "outcome": "skipped_by_question_gate"
+    }
+  ],
+  "counts": {
+    "questions": 14,
+    "cluster_from_seed": 2,
+    "cluster_assigned_by_embedding": 12,
+    "fail_open": 0,
+    "question_gate_accept_first_try": 4,
+    "question_gate_accept_after_regen": 1,
+    "question_gate_reject": 9,
+    "no_search_result": 0,
+    "post_gate_accept": 5,
+    "post_gate_reject": 0,
+    "written_without_any_gate": 0,
+    "ingested": 5,
+    "facts_extracted": 57,
+    "facts_kept": 40,
+    "facts_duplicate": 6,
+    "facts_dropped_unconnected": 11,
+    "fact_conflicts": 0
+  },
+  "entity_nodes_after": 36,
+  "finished_at": "2026-10-20T14:10:00"
+}

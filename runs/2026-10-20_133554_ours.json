@@ -1,0 +1,937 @@
+{
+  "run_tag": "ours",
+  "started_at": "2026-10-20T13:35:54",
+  "settings": {
+    "selection_mode": "best",
+    "num_candidates": 3,
+    "metrics": [
+      "clique",
+      "non_clique",
+      "clustering",
+      "degree",
+      "betweenness",
+      "diameter",
+      "louvain"
+    ]
+  },
+  "entity_nodes_before": 12,
+  "clusters": {
+    "0": [
+      "3.3 million viewers",
+      "Latin America",
+      "north region",
+      "premiere of High School Musical 2"
+    ],
+    "1": [
+      "Argentina",
+      "Brazil",
+      "High School Musical",
+      "Mexico",
+      "North region",
+      "Premiere"
+    ],
+    "2": [
+      "Disney Channel",
+      "High School Musical 2"
+    ]
+  },
+  "questions": [
+    {
+      "metric": "clique",
+      "target_node": "north region",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:84",
+      "question": "Which specific country or area does the \"north region\" refer to in the context of the High School Musical 2 premiere?",
+      "cluster_resolution": "seed",
+      "cluster_id": 0,
+      "question_gate_1": {
+        "decision": "accept",
+        "score": 0.4828,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.465538169098576,
+          "entity": 0.5,
+          "accepted": null,
+          "rejected": null
+        }
+      },
+      "regenerated_question": null,
+      "question_gate_2": null,
+      "final_question": "Which specific country or area does the \"north region\" refer to in the context of the High School Musical 2 premiere?",
+      "retrieval": {
+        "question": "Which specific country or area does the \"north region\" refer to in the context of the High School Musical 2 premiere?",
+        "mode": "best",
+        "chosen_index": 0,
+        "candidates": [
+          {
+            "index": 0,
+            "url": "https://en.wikipedia.org/wiki/High_School_Musical_2",
+            "title": "High School Musical 2 - Wikipedia",
+            "chars": 1286,
+            "tavily_score": 0.7817479,
+            "similarity": 0.5734,
+            "too_short": false
+          },
+          {
+            "index": 1,
+            "url": "https://www.innatentrada.com/blog/high-school-musical-2-at-the-inn-at-entrada",
+            "title": "High School Musical 2 at The Inn at Entrada Blog | The Inn at Entrada",
+            "chars": 1268,
+            "tavily_score": 0.27244946,
+            "similarity": 0.2943,
+            "too_short": false
+          },
+          {
+            "index": 2,
+            "url": "https://giggster.com/guide/movie-location/where-was-high-school-musical-2-filmed",
+            "title": "Where Was High School Musical 2 Filmed? Complete Location Guide",
+            "chars": 1264,
+            "tavily_score": 0.18033785,
+            "similarity": 0.5318,
+            "too_short": false
+          }
+        ],
+        "min_chars": 300,
+        "min_chars_fallback": false
+      },
+      "post_gate": {
+        "decision": "reject",
+        "score": 0.4431,
+        "signals": {
+          "semantic": 0.5015922098411701,
+          "entity_overlap": 0.38461538461538464
+        },
+        "kept_entities": []
+      },
+      "outcome": "rejected_by_post_gate"
+    },
+    {
+      "metric": "clique",
+      "target_node": "Disney Channel",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:154",
+      "question": "What specific rating or viewership record did Disney Channel achieve with the High School Musical 2 premiere?",
+      "cluster_resolution": "seed",
+      "cluster_id": 2,
+      "question_gate_1": {
+        "decision": "accept",
+        "score": 0.5752,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.6503452475782728,
+          "entity": 0.5,
+          "accepted": null,
+          "rejected": null
+        }
+      },
+      "regenerated_question": null,
+      "question_gate_2": null,
+      "final_question": "What specific rating or viewership record did Disney Channel achieve with the High School Musical 2 premiere?",
+      "retrieval": {
+        "question": "What specific rating or viewership record did Disney Channel achieve with the High School Musical 2 premiere?",
+        "mode": "best",
+        "chosen_index": 2,
+        "candidates": [
+          {
+            "index": 0,
+            "url": "https://en.wikipedia.org/wiki/High_School_Musical_2",
+            "title": "High School Musical 2 - Wikipedia",
+            "chars": 1507,
+            "tavily_score": 0.9405774,
+            "similarity": 0.7099,
+            "too_short": false
+          },
+          {
+            "index": 1,
+            "url": "https://playbill.com/article/most-likely-to-succeed-high-school-musical-2-draws-record-breaking-172-million-com-143110",
+            "title": "Most Likely to Succeed: \"High School Musical 2\" Draws Record-Breaking 17.2 Million | Playbill",
+            "chars": 1070,
+            "tavily_score": 0.90102744,
+            "similarity": 0.708,
+            "too_short": false
+          },
+          {
+            "index": 2,
+            "url": "https://www.hollywoodreporter.com/business/business-news/high-school-musical-2-upstages-148285",
+            "title": "‘High School Musical 2’ upstages TV records",
+            "chars": 1032,
+            "tavily_score": 0.8737439,
+            "similarity": 0.7196,
+            "too_short": false
+          }
+        ],
+        "min_chars": 300,
+        "min_chars_fallback": false
+      },
+      "post_gate": {
+        "decision": "reject",
+        "score": 0.3637,
+        "signals": {
+          "semantic": 0.3273141754438618,
+          "entity_overlap": 0.4
+        },
+        "kept_entities": []
+      },
+      "outcome": "rejected_by_post_gate"
+    },
+    {
+      "metric": "non_clique",
+      "target_node": "Latin America",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:72",
+      "question": "What countries are encompassed by the \"Latin America\" region referenced in the viewership data?",
+      "cluster_resolution": "seed",
+      "cluster_id": 0,
+      "question_gate_1": {
+        "decision": "accept",
+        "score": 0.6001,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.22365729753452437,
+          "entity": 1.0,
+          "accepted": null,
+          "rejected": 0.43520797043549386
+        }
+      },
+      "regenerated_question": null,
+      "question_gate_2": null,
+      "final_question": "What countries are encompassed by the \"Latin America\" region referenced in the viewership data?",
+      "retrieval": {
+        "question": "What countries are encompassed by the \"Latin America\" region referenced in the viewership data?",
+        "mode": "best",
+        "chosen_index": 1,
+        "candidates": [
+          {
+            "index": 0,
+            "url": "https://medium.com/dfrlab/a-glimpse-into-rts-latin-american-audience-487d52bed507",
+            "title": "A glimpse into RT’s Latin American audience",
+            "chars": 1157,
+            "tavily_score": 0.5874941,
+            "similarity": 0.5499,
+            "too_short": false
+          },
+          {
+            "index": 1,
+            "url": "https://en.wikipedia.org/wiki/Latin_America",
+            "title": "Latin America - Wikipedia",
+            "chars": 1466,
+            "tavily_score": 0.5013922,
+            "similarity": 0.5567,
+            "too_short": false
+          },
+          {
+            "index": 2,
+            "url": "https://americasmi.com/insights/media-consumption-latin-america",
+            "title": "Media Consumption in Latin America 2023 and Its Impact on Marketing | Americas Market Intelligence",
+            "chars": 295,
+            "tavily_score": 0.4784076,
+            "similarity": 0.6084,
+            "too_short": true
+          }
+        ],
+        "min_chars": 300,
+        "min_chars_fallback": false
+      },
+      "post_gate": {
+        "decision": "reject",
+        "score": 0.0221,
+        "signals": {
+          "semantic": 0.031254485778766765,
+          "entity_overlap": 0.012987012987012988
+        },
+        "kept_entities": []
+      },
+      "outcome": "rejected_by_post_gate"
+    },
+    {
+      "metric": "non_clique",
+      "target_node": "3.3 million viewers",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:156",
+      "question": "Which specific region or audience does the figure of 3.3 million viewers pertain to for the High School Musical 2 premiere?",
+      "cluster_resolution": "seed",
+      "cluster_id": 0,
+      "question_gate_1": {
+        "decision": "accept",
+        "score": 0.4606,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.49900521125831,
+          "entity": 0.5,
+          "accepted": null,
+          "rejected": 0.6560593132540827
+        }
+      },
+      "regenerated_question": null,
+      "question_gate_2": null,
+      "final_question": "Which specific region or audience does the figure of 3.3 million viewers pertain to for the High School Musical 2 premiere?",
+      "retrieval": {
+        "question": "Which specific region or audience does the figure of 3.3 million viewers pertain to for the High School Musical 2 premiere?",
+        "mode": "best",
+        "chosen_index": 1,
+        "candidates": [
+          {
+            "index": 0,
+            "url": "https://en.wikipedia.org/wiki/High_School_Musical_2",
+            "title": "High School Musical 2 - Wikipedia",
+            "chars": 1505,
+            "tavily_score": 0.9202254,
+            "similarity": 0.6291,
+            "too_short": false
+          },
+          {
+            "index": 1,
+            "url": "https://www.today.com/popculture/high-school-musical-2-sets-ratings-record-1c9429335",
+            "title": "‘High School Musical 2’ sets ratings record",
+            "chars": 1222,
+            "tavily_score": 0.49128565,
+            "similarity": 0.6368,
+            "too_short": false
+          },
+          {
+            "index": 2,
+            "url": "https://www.mtishows.com/disneys-high-school-musical-2",
+            "title": "Disney's High School Musical 2 | Music Theatre International",
+            "chars": 1302,
+            "tavily_score": 0.36290202,
+            "similarity": 0.4841,
+            "too_short": false
+          }
+        ],
+        "min_chars": 300,
+        "min_chars_fallback": false
+      },
+      "post_gate": {
+        "decision": "reject",
+        "score": 0.249,
+        "signals": {
+          "semantic": 0.34014294221590924,
+          "entity_overlap": 0.15789473684210525
+        },
+        "kept_entities": []
+      },
+      "outcome": "rejected_by_post_gate"
+    },
+    {
+      "metric": "clustering",
+      "target_node": "High School Musical 2",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:71",
+      "question": "What was the original broadcast date of High School Musical 2?",
+      "cluster_resolution": "seed",
+      "cluster_id": 2,
+      "question_gate_1": {
+        "decision": "accept",
+        "score": 0.5141,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.6649889588746217,
+          "entity": 0.5,
+          "accepted": null,
+          "rejected": 0.6910693730563642
+        }
+      },
+      "regenerated_question": null,
+      "question_gate_2": null,
+      "final_question": "What was the original broadcast date of High School Musical 2?",
+      "retrieval": {
+        "question": "What was the original broadcast date of High School Musical 2?",
+        "mode": "best",
+        "chosen_index": 2,
+        "candidates": [
+          {
+            "index": 0,
+            "url": "https://en.wikipedia.org/wiki/High_School_Musical",
+            "title": "High School Musical - Wikipedia",
+            "chars": 1152,
+            "tavily_score": 0.8624794,
+            "similarity": 0.6179,
+            "too_short": false
+          },
+          {
+            "index": 1,
+            "url": "https://en.wikipedia.org/wiki/High_School_Musical_2",
+            "title": "High School Musical 2 - Wikipedia",
+            "chars": 1451,
+            "tavily_score": 0.826278,
+            "similarity": 0.6902,
+            "too_short": false
+          },
+          {
+            "index": 2,
+            "url": "https://www.hollywoodreporter.com/business/business-news/high-school-musical-2-upstages-148285",
+            "title": "‘High School Musical 2’ upstages TV records",
+            "chars": 1144,
+            "tavily_score": 0.67988104,
+            "similarity": 0.7015,
+            "too_short": false
+          }
+        ],
+        "min_chars": 300,
+        "min_chars_fallback": false
+      },
+      "post_gate": {
+        "decision": "reject",
+        "score": 0.4729,
+        "signals": {
+          "semantic": 0.5887219986049402,
+          "entity_overlap": 0.35714285714285715
+        },
+        "kept_entities": []
+      },
+      "outcome": "rejected_by_post_gate"
+    },
+    {
+      "metric": "clustering",
+      "target_node": "premiere of High School Musical 2",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:85",
+      "question": "On which channel did the premiere of High School Musical 2 air?",
+      "cluster_resolution": "seed",
+      "cluster_id": 0,
+      "question_gate_1": {
+        "decision": "accept",
+        "score": 0.5552,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.5770649429268326,
+          "entity": 0.6666666666666666,
+          "accepted": null,
+          "rejected": 0.6449626335283565
+        }
+      },
+      "regenerated_question": null,
+      "question_gate_2": null,
+      "final_question": "On which channel did the premiere of High School Musical 2 air?",
+      "retrieval": {
+        "question": "On which channel did the premiere of High School Musical 2 air?",
+        "mode": "best",
+        "chosen_index": 0,
+        "candidates": [
+          {
+            "index": 0,
+            "url": "https://en.wikipedia.org/wiki/High_School_Musical_2",
+            "title": "High School Musical 2 - Wikipedia",
+            "chars": 1451,
+            "tavily_score": 0.9456058,
+            "similarity": 0.767,
+            "too_short": false
+          },
+          {
+            "index": 1,
+            "url": "https://en.wikipedia.org/wiki/High_School_Musical",
+            "title": "High School Musical - Wikipedia",
+            "chars": 1152,
+            "tavily_score": 0.9380391,
+            "similarity": 0.7405,
+            "too_short": false
+          },
+          {
+            "index": 2,
+            "url": "https://thewaltdisneycompany.com/news/high-school-musical-20th-anniversary",
+            "title": "'High School Musical' Turns 20: How the Disney Channel Phenomenon Became the Blueprint for Music-Driven, Global Franchises | The Walt Disney Company",
+            "chars": 1415,
+            "tavily_score": 0.68318754,
+            "similarity": 0.703,
+            "too_short": false
+          }
+        ],
+        "min_chars": 300,
+        "min_chars_fallback": false
+      },
+      "post_gate": {
+        "decision": "reject",
+        "score": 0.3135,
+        "signals": {
+          "semantic": 0.47325027915355433,
+          "entity_overlap": 0.15384615384615385
+        },
+        "kept_entities": []
+      },
+      "outcome": "rejected_by_post_gate"
+    },
+    {
+      "metric": "degree",
+      "target_node": "Mexico",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:158",
+      "question": "What percentage increase in viewership did High School Musical 2 achieve in Mexico?",
+      "cluster_resolution": "seed",
+      "cluster_id": 1,
+      "question_gate_1": {
+        "decision": "reject",
+        "score": 0.6272,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.7543370577535775,
+          "entity": 0.5,
+          "accepted": null,
+          "rejected": null
+        }
+      },
+      "regenerated_question": "What was the total audience size for the debut of High School Musical in Mexico?",
+      "question_gate_2": {
+        "decision": "accept",
+        "score": 0.5501,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.6002308845146498,
+          "entity": 0.5,
+          "accepted": null,
+          "rejected": null
+        }
+      },
+      "final_question": "What was the total audience size for the debut of High School Musical in Mexico?",
+      "retrieval": {
+        "question": "What was the total audience size for the debut of High School Musical in Mexico?",
+        "mode": "best",
+        "chosen_index": 2,
+        "candidates": [
+          {
+            "index": 0,
+            "url": "https://en.wikipedia.org/wiki/High_School_Musical",
+            "title": "High School Musical - Wikipedia",
+            "chars": 1280,
+            "tavily_score": 0.5968332,
+            "similarity": 0.4905,
+            "too_short": false
+          },
+          {
+            "index": 1,
+            "url": "https://blog.strazcenter.org/2026/04/08/high-school-musical-still-resonates-with-its-audience",
+            "title": "High School Musical Still Resonates With Its Audience – Caught in the Act",
+            "chars": 956,
+            "tavily_score": 0.49084634,
+            "similarity": 0.5521,
+            "too_short": false
+          },
+          {
+            "index": 2,
+            "url": "https://now.temple.edu/news/2026-01-28/high-school-musical-turns-20-year-what-its-legacy-childrens-media",
+            "title": "‘High School Musical’ turns 20 this year. What is its legacy for children’s media? | Temple Now",
+            "chars": 447,
+            "tavily_score": 0.402745,
+            "similarity": 0.5736,
+            "too_short": false
+          }
+        ],
+        "min_chars": 300,
+        "min_chars_fallback": false
+      },
+      "post_gate": {
+        "decision": "reject",
+        "score": 0.0,
+        "signals": {
+          "semantic": null,
+          "entity_overlap": 0.0
+        },
+        "kept_entities": []
+      },
+      "outcome": "rejected_by_post_gate"
+    },
+    {
+      "metric": "degree",
+      "target_node": "High School Musical",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:155",
+      "question": "In what year was the original High School Musical film released?",
+      "cluster_resolution": "seed",
+      "cluster_id": 1,
+      "question_gate_1": {
+        "decision": "reject",
+        "score": 0.5078,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.6163201371968563,
+          "entity": 0.5,
+          "accepted": null,
+          "rejected": 0.6433738535419495
+        }
+      },
+      "regenerated_question": "Which cable channel broadcast the premiere of High School Musical 2?",
+      "question_gate_2": {
+        "decision": "accept",
+        "score": 0.7554,
+        "path": "deterministic",
+        "signals": {
+          "semantic": 0.69232242454283,
+          "entity": 1.0,
+          "accepted": null,
+          "rejected": 0.5168925900856879
+        }
+      },
+      "final_question": "Which cable channel broadcast the premiere of High School Musical 2?",
+      "retrieval": {
+        "question": "Which cable channel broadcast the premiere of High School Musical 2?",
+        "mode": "best",
+        "chosen_index": 0,
+        "candidates": [
+          {
+            "index": 0,
+            "url": "https://en.wikipedia.org/wiki/High_School_Musical_2",
+            "title": "High School Musical 2 - Wikipedia",
+            "chars": 1451,
+            "tavily_score": 0.9274752,
+            "similarity": 0.7521,
+            "too_short": false
+          },
+          {
+            "index": 1,
+            "url": "https://www.hollywoodreporter.com/business/business-news/high-school-musical-2-upstages-148285",
+            "title": "‘High School Musical 2’ upstages TV records",
+            "chars": 1050,
+            "tavily_score": 0.8740022,
+            "similarity": 0.7342,
+            "too_short": false
+          },
+          {
+            "index": 2,
+            "url": "https://playbill.com/article/disney-channels-high-school-musical-2-already-available-to-on-demand-cable-watchers-com-143006",
+            "title": "Disney Channel's \"High School Musical 2\" Already Available to On-Demand Cable Watchers | Playbill",
+            "chars": 1036,
+            "tavily_score": 0.8449346,
+            "similarity": 0.7204,
+            "too_short": false
+          }
+        ],
+        "min_chars": 300,
+        "min_chars_fallback": false
+      },
+      "post_gate": {
+        "decision": "reject",
+        "score": 0.4205,
+        "signals": {
+          "semantic": 0.5409093488097931,
+          "entity_overlap": 0.3
+        },
+        "kept_entities": []
+      },
+      "outcome": "rejected_by_post_gate"
+    },
+    {
+      "metric": "betweenness",
+      "target_node": "Brazil",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:157",
+      "question": "How many viewers tuned in for the High School Musical sequel during its premiere in Brazil?",
+      "cluster_resolution": "seed",
+      "cluster_id": 1,
+      "question_gate_1": {
+        "decision": "accept",
+        "score": 0.7428,
+        "path": "deterministic",
+        "signals": {
+          "semantic": 0.7611790475094875,
+          "entity": 1.0,
+          "accepted": null,
+          "rejected": 0.6707487804861315
+        }
+      },
+      "regenerated_question": null,
+      "question_gate_2": null,
+      "final_question": "How many viewers tuned in for the High School Musical sequel during its premiere in Brazil?",
+      "retrieval": {
+        "question": "How many viewers tuned in for the High School Musical sequel during its premiere in Brazil?",
+        "mode": "best",
+        "chosen_index": 0,
+        "candidates": [
+          {
+            "index": 0,
+            "url": "https://en.wikipedia.org/wiki/High_School_Musical_2",
+            "title": "High School Musical 2 - Wikipedia",
+            "chars": 1507,
+            "tavily_score": 0.92825955,
+            "similarity": 0.6872,
+            "too_short": false
+          },
+          {
+            "index": 1,
+            "url": "https://thewaltdisneycompany.com/news/high-school-musical-20th-anniversary",
+            "title": "'High School Musical' Turns 20: How the Disney Channel Phenomenon Became the Blueprint for Music-Driven, Global Franchises | The Walt Disney Company",
+            "chars": 1148,
+            "tavily_score": 0.7173491,
+            "similarity": 0.6719,
+            "too_short": false
+          },
+          {
+            "index": 2,
+            "url": "https://blog.strazcenter.org/2026/04/08/high-school-musical-still-resonates-with-its-audience",
+            "title": "High School Musical Still Resonates With Its Audience – Caught in the Act",
+            "chars": 398,
+            "tavily_score": 0.69024646,
+            "similarity": 0.6603,
+            "too_short": false
+          }
+        ],
+        "min_chars": 300,
+        "min_chars_fallback": false
+      },
+      "post_gate": {
+        "decision": "reject",
+        "score": 0.6128,
+        "signals": {
+          "semantic": 0.8024641585040474,
+          "entity_overlap": 0.4230769230769231
+        },
+        "kept_entities": []
+      },
+      "outcome": "rejected_by_post_gate"
+    },
+    {
+      "metric": "betweenness",
+      "target_node": "Latin America",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:72",
+      "question": "How many Latin American countries aired the premiere of High School Musical 2?",
+      "cluster_resolution": "seed",
+      "cluster_id": 0,
+      "question_gate_1": {
+        "decision": "reject",
+        "score": 0.3111,
+        "path": "deterministic",
+        "signals": {
+          "semantic": 0.6340694751787092,
+          "entity": 0.0,
+          "accepted": null,
+          "rejected": 0.706800177689936
+        }
+      },
+      "regenerated_question": "What was the total box office revenue generated by High School Musical 2 in Latin America?",
+      "question_gate_2": {
+        "decision": "reject",
+        "score": 0.4696,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.5055052889196139,
+          "entity": 0.5,
+          "accepted": null,
+          "rejected": 0.6297952191346187
+        }
+      },
+      "final_question": null,
+      "retrieval": null,
+      "post_gate": null,
+      "outcome": "skipped_by_question_gate"
+    },
+    {
+      "metric": "diameter",
+      "target_node": "Argentina",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:152",
+      "question": "What was the viewership rating of the High School Musical 2 premiere in Argentina?",
+      "cluster_resolution": "seed",
+      "cluster_id": 1,
+      "question_gate_1": {
+        "decision": "accept",
+        "score": 0.7203,
+        "path": "deterministic",
+        "signals": {
+          "semantic": 0.8009114461745362,
+          "entity": 1.0,
+          "accepted": null,
+          "rejected": 0.8202163534961794
+        }
+      },
+      "regenerated_question": null,
+      "question_gate_2": null,
+      "final_question": "What was the viewership rating of the High School Musical 2 premiere in Argentina?",
+      "retrieval": {
+        "question": "What was the viewership rating of the High School Musical 2 premiere in Argentina?",
+        "mode": "best",
+        "chosen_index": 1,
+        "candidates": [
+          {
+            "index": 0,
+            "url": "https://en.wikipedia.org/wiki/High_School_Musical_2",
+            "title": "High School Musical 2 - Wikipedia",
+            "chars": 1507,
+            "tavily_score": 0.95857275,
+            "similarity": 0.6598,
+            "too_short": false
+          },
+          {
+            "index": 1,
+            "url": "https://www.hollywoodreporter.com/business/business-news/high-school-musical-2-upstages-148285",
+            "title": "‘High School Musical 2’ upstages TV records",
+            "chars": 1219,
+            "tavily_score": 0.57437146,
+            "similarity": 0.672,
+            "too_short": false
+          },
+          {
+            "index": 2,
+            "url": "https://playbill.com/article/most-likely-to-succeed-high-school-musical-2-draws-record-breaking-172-million-com-143110",
+            "title": "Most Likely to Succeed: \"High School Musical 2\" Draws Record-Breaking 17.2 Million | Playbill",
+            "chars": 1184,
+            "tavily_score": 0.5504388,
+            "similarity": 0.5967,
+            "too_short": false
+          }
+        ],
+        "min_chars": 300,
+        "min_chars_fallback": false
+      },
+      "post_gate": {
+        "decision": "reject",
+        "score": 0.2816,
+        "signals": {
+          "semantic": 0.44557138309297145,
+          "entity_overlap": 0.11764705882352941
+        },
+        "kept_entities": []
+      },
+      "outcome": "rejected_by_post_gate"
+    },
+    {
+      "metric": "louvain",
+      "target_node": "north region",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:84",
+      "question": "Which specific country or states comprise the north region referenced in the viewership data?",
+      "cluster_resolution": "seed",
+      "cluster_id": 0,
+      "question_gate_1": {
+        "decision": "reject",
+        "score": 0.3054,
+        "path": "deterministic",
+        "signals": {
+          "semantic": 0.1697360596282993,
+          "entity": 0.5,
+          "accepted": null,
+          "rejected": 0.7830188525711265
+        }
+      },
+      "regenerated_question": "Which television network aired the High School Musical 2 premiere that drew 3.3 million viewers in the north region of Latin America?",
+      "question_gate_2": {
+        "decision": "accept",
+        "score": 0.561,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.6117591738589506,
+          "entity": 0.75,
+          "accepted": null,
+          "rejected": 0.7986866756779566
+        }
+      },
+      "final_question": "Which television network aired the High School Musical 2 premiere that drew 3.3 million viewers in the north region of Latin America?",
+      "retrieval": {
+        "question": "Which television network aired the High School Musical 2 premiere that drew 3.3 million viewers in the north region of Latin America?",
+        "mode": "best",
+        "chosen_index": 0,
+        "candidates": [
+          {
+            "index": 0,
+            "url": "https://en.wikipedia.org/wiki/High_School_Musical",
+            "title": "High School Musical - Wikipedia",
+            "chars": 1427,
+            "tavily_score": 0.7950386,
+            "similarity": 0.6903,
+            "too_short": false
+          },
+          {
+            "index": 1,
+            "url": "https://www.facebook.com/disneydaveukwdwinfo/posts/19-years-ago-today-high-school-musical-2-premiered-on-disney-channel-%EF%B8%8Fon-august-/1663744775753526",
+            "title": "19 Years Ago Today: High School Musical 2 Premiered ...",
+            "chars": 140,
+            "tavily_score": 0.7653308,
+            "similarity": 0.6861,
+            "too_short": true
+          },
+          {
+            "index": 2,
+            "url": "https://www.hollywoodreporter.com/business/business-news/high-school-musical-2-upstages-148285",
+            "title": "‘High School Musical 2’ upstages TV records",
+            "chars": 1050,
+            "tavily_score": 0.6141863,
+            "similarity": 0.6757,
+            "too_short": false
+          }
+        ],
+        "min_chars": 300,
+        "min_chars_fallback": false
+      },
+      "post_gate": {
+        "decision": "reject",
+        "score": 0.0,
+        "signals": {
+          "semantic": null,
+          "entity_overlap": 0.0
+        },
+        "kept_entities": []
+      },
+      "outcome": "rejected_by_post_gate"
+    },
+    {
+      "metric": "louvain",
+      "target_node": "Disney Channel",
+      "target_node_id": "4:b5ec376f-1b1f-47bd-b329-721bce949124:154",
+      "question": "On which Disney Channel (country or region) did the record‑breaking premiere of High School Musical 2 occur?",
+      "cluster_resolution": "seed",
+      "cluster_id": 2,
+      "question_gate_1": {
+        "decision": "accept",
+        "score": 0.6958,
+        "path": "llm_tiebreak",
+        "signals": {
+          "semantic": 0.731679971784469,
+          "entity": 1.0,
+          "accepted": null,
+          "rejected": 0.814430389445862
+        }
+      },
+      "regenerated_question": null,
+      "question_gate_2": null,
+      "final_question": "On which Disney Channel (country or region) did the record‑breaking premiere of High School Musical 2 occur?",
+      "retrieval": {
+        "question": "On which Disney Channel (country or region) did the record‑breaking premiere of High School Musical 2 occur?",
+        "mode": "best",
+        "chosen_index": 2,
+        "candidates": [
+          {
+            "index": 0,
+            "url": "https://en.wikipedia.org/wiki/High_School_Musical_2",
+            "title": "High School Musical 2 - Wikipedia",
+            "chars": 1168,
+            "tavily_score": 0.79369855,
+            "similarity": 0.8229,
+            "too_short": false
+          },
+          {
+            "index": 1,
+            "url": "https://playbill.com/article/most-likely-to-succeed-high-school-musical-2-draws-record-breaking-172-million-com-143110",
+            "title": "Most Likely to Succeed: \"High School Musical 2\" Draws Record-Breaking 17.2 Million | Playbill",
+            "chars": 1439,
+            "tavily_score": 0.5837973,
+            "similarity": 0.6129,
+            "too_short": false
+          },
+          {
+            "index": 2,
+            "url": "https://www.hollywoodreporter.com/business/business-news/high-school-musical-2-upstages-148285",
+            "title": "‘High School Musical 2’ upstages TV records",
+            "chars": 1250,
+            "tavily_score": 0.4581311,
+            "similarity": 0.8319,
+            "too_short": false
+          }
+        ],
+        "min_chars": 300,
+        "min_chars_fallback": false
+      },
+      "post_gate": {
+        "decision": "reject",
+        "score": 0.4441,
+        "signals": {
+          "semantic": 0.4882687238880727,
+          "entity_overlap": 0.4
+        },
+        "kept_entities": []
+      },
+      "outcome": "rejected_by_post_gate"
+    }
+  ],
+  "counts": {
+    "questions": 13,
+    "cluster_from_seed": 13,
+    "cluster_assigned_by_embedding": 0,
+    "fail_open": 0,
+    "question_gate_accept_first_try": 9,
+    "question_gate_accept_after_regen": 3,
+    "question_gate_reject": 1,
+    "no_search_result": 0,
+    "post_gate_accept": 0,
+    "post_gate_reject": 12,
+    "written_without_any_gate": 0,
+    "ingested": 0
+  },
+  "entity_nodes_after": 12,
+  "finished_at": "2026-10-20T13:49:31"
+}
